@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cyrk4wcenl756"]
+
+[node name="Clue" type="HBoxContainer"]
+
+[node name="ClueNumber" type="Label" parent="."]
+layout_mode = 2
+text = "1."
+
+[node name="ClueText" type="Label" parent="."]
+layout_mode = 2
+text = "Lorem Ipsum"
