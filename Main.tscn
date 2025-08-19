@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwln3ctc1xxek"]
+[gd_scene load_steps=4 format=3 uid="uid://cwln3ctc1xxek"]
 
 [ext_resource type="PackedScene" uid="uid://cyrk4wcenl756" path="res://Components/Clue.tscn" id="1_glv2v"]
-[ext_resource type="Theme" uid="uid://cvbgw8ftkgksc" path="res://Theme.tres" id="1_uu6xs"]
+[ext_resource type="Script" uid="uid://dfdt0ttbrkg60" path="res://Board.gd" id="3_r0du0"]
+[ext_resource type="PackedScene" uid="uid://68cxd5ein8rr" path="res://Components/Cell.tscn" id="4_cm0pq"]
 
 [node name="Node2D" type="Control"]
 layout_mode = 3
@@ -18,98 +19,115 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_uu6xs")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VSplitContainer" type="VSplitContainer" parent="PanelContainer/HSplitContainer"]
+[node name="LeftSidebar" type="VSplitContainer" parent="PanelContainer/HSplitContainer"]
 layout_mode = 2
 
-[node name="AcrossClues" type="VBoxContainer" parent="PanelContainer/HSplitContainer/VSplitContainer"]
+[node name="AcrossClues" type="VBoxContainer" parent="PanelContainer/HSplitContainer/LeftSidebar"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="AcrossHeader" type="Label" parent="PanelContainer/HSplitContainer/VSplitContainer/AcrossClues"]
+[node name="AcrossHeader" type="Label" parent="PanelContainer/HSplitContainer/LeftSidebar/AcrossClues"]
 layout_mode = 2
 text = "Across"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/VSplitContainer/AcrossClues"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/LeftSidebar/AcrossClues"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Clue" parent="PanelContainer/HSplitContainer/VSplitContainer/AcrossClues/VBoxContainer" instance=ExtResource("1_glv2v")]
+[node name="Clue" parent="PanelContainer/HSplitContainer/LeftSidebar/AcrossClues/VBoxContainer" instance=ExtResource("1_glv2v")]
 layout_mode = 2
 
-[node name="Clue2" parent="PanelContainer/HSplitContainer/VSplitContainer/AcrossClues/VBoxContainer" instance=ExtResource("1_glv2v")]
+[node name="Clue2" parent="PanelContainer/HSplitContainer/LeftSidebar/AcrossClues/VBoxContainer" instance=ExtResource("1_glv2v")]
 layout_mode = 2
 
-[node name="Clue3" parent="PanelContainer/HSplitContainer/VSplitContainer/AcrossClues/VBoxContainer" instance=ExtResource("1_glv2v")]
+[node name="Clue3" parent="PanelContainer/HSplitContainer/LeftSidebar/AcrossClues/VBoxContainer" instance=ExtResource("1_glv2v")]
 layout_mode = 2
 
-[node name="DownClues" type="VBoxContainer" parent="PanelContainer/HSplitContainer/VSplitContainer"]
+[node name="DownClues" type="VBoxContainer" parent="PanelContainer/HSplitContainer/LeftSidebar"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="DownHeader" type="Label" parent="PanelContainer/HSplitContainer/VSplitContainer/DownClues"]
+[node name="DownHeader" type="Label" parent="PanelContainer/HSplitContainer/LeftSidebar/DownClues"]
 layout_mode = 2
 text = "Down"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/VSplitContainer/DownClues"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/LeftSidebar/DownClues"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Clue" parent="PanelContainer/HSplitContainer/VSplitContainer/DownClues/VBoxContainer" instance=ExtResource("1_glv2v")]
+[node name="Clue" parent="PanelContainer/HSplitContainer/LeftSidebar/DownClues/VBoxContainer" instance=ExtResource("1_glv2v")]
 layout_mode = 2
 
-[node name="Clue2" parent="PanelContainer/HSplitContainer/VSplitContainer/DownClues/VBoxContainer" instance=ExtResource("1_glv2v")]
+[node name="Clue2" parent="PanelContainer/HSplitContainer/LeftSidebar/DownClues/VBoxContainer" instance=ExtResource("1_glv2v")]
 layout_mode = 2
 
-[node name="Clue3" parent="PanelContainer/HSplitContainer/VSplitContainer/DownClues/VBoxContainer" instance=ExtResource("1_glv2v")]
+[node name="Clue3" parent="PanelContainer/HSplitContainer/LeftSidebar/DownClues/VBoxContainer" instance=ExtResource("1_glv2v")]
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="PanelContainer/HSplitContainer"]
+[node name="Right" type="HSplitContainer" parent="PanelContainer/HSplitContainer"]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="PanelContainer/HSplitContainer/HSplitContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HSplitContainer/Right"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/HSplitContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer/HSplitContainer/Right/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer"]
+[node name="Board" type="Control" parent="PanelContainer/HSplitContainer/Right/PanelContainer/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3_r0du0")
+cell_instance = ExtResource("4_cm0pq")
+cell_size_default = 48
+dimentions = Vector2i(5, 5)
+
+[node name="RightSidebar" type="VBoxContainer" parent="PanelContainer/HSplitContainer/Right"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar"]
 layout_mode = 2
 text = "Chat"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HSplitContainer/Right/RightSidebar"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer/VBoxContainer"]
+[node name="ChatMessage" type="VBoxContainer" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer"]
+layout_mode = 2
+
+[node name="Username" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer/ChatMessage"]
 layout_mode = 2
 text = "Lorem Ipsum"
 
-[node name="Label2" type="Label" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer/VBoxContainer"]
+[node name="Message" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer/ChatMessage"]
 layout_mode = 2
 text = "Lorem Ipsum"
 
-[node name="Label3" type="Label" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer"]
 layout_mode = 2
 text = "Lorem Ipsum"
 
-[node name="Label4" type="Label" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer"]
 layout_mode = 2
 text = "Lorem Ipsum"
 
-[node name="Label5" type="Label" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer/VBoxContainer"]
+[node name="Label4" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer"]
 layout_mode = 2
 text = "Lorem Ipsum"
 
-[node name="Label6" type="Label" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer/VBoxContainer"]
+[node name="Label5" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer"]
 layout_mode = 2
 text = "Lorem Ipsum"
 
-[node name="TextEdit" type="TextEdit" parent="PanelContainer/HSplitContainer/HSplitContainer/VBoxContainer"]
+[node name="Label6" type="Label" parent="PanelContainer/HSplitContainer/Right/RightSidebar/VBoxContainer"]
+layout_mode = 2
+text = "Lorem Ipsum"
+
+[node name="TextEdit" type="TextEdit" parent="PanelContainer/HSplitContainer/Right/RightSidebar"]
 layout_mode = 2
