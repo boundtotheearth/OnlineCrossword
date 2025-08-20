@@ -3,18 +3,7 @@ extends Object
 
 var data: CrosswordData
 
-func parse(raw_data: String) -> Error:
-	var json = JSON.new()
-	var result = json.parse(raw_data)
-	
-	var json_data: Dictionary
-	if (result == OK):
-		json_data = json.data
-	else:
-		print("Failed to parse crossword data")
-		print(str(json.get_error_line()) + ": " + json.get_error_message())
-		return FAILED
-	
+func parse_json(json_data: Dictionary):
 	data = CrosswordData.new()
 	
 	data.id = json_data.get("puzzleId", "ERROR")
@@ -35,21 +24,37 @@ func parse(raw_data: String) -> Error:
 	
 	data.clues = []
 	var clues = json_data.get("words", [])
-	var number = 1
-	var prev_direction = -1
+
 	for clue in clues:
 		var clue_data = ClueData.new()
 		clue_data.clue = clue.get("clue", "ERROR")
 		clue_data.direction = _string_to_direction(clue.get("direction", "across"))
-		
-		if (clue_data.direction != prev_direction):
-			number = 1
-		clue_data.number = number
-		prev_direction = clue_data.direction
-		number += 1
+		var indexes = clue.get("indexes", [0])
+		clue_data.indexes.clear()
+		for index in indexes:
+			clue_data.indexes.append(int(index))
+		clue_data.number = data.cells[clue_data.indexes[0]].number
 		
 		data.clues.append(clue_data)
+
+	for clue in data.clues:
+		for index in clue.indexes:
+			data.cells[index].clues.set(clue.direction, clue)
+
+func parse_string(raw_data: String) -> Error:
+	var json = JSON.new()
+	var result = json.parse(raw_data)
 	
+	var json_data: Dictionary
+	if (result == OK):
+		json_data = json.data
+	else:
+		print("Failed to parse crossword data")
+		print(str(json.get_error_line()) + ": " + json.get_error_message())
+		return FAILED
+	
+	parse_json(json_data)
+			
 	return OK
 
 func _string_to_direction(string: String) -> Globals.Direction:

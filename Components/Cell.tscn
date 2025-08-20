@@ -96,12 +96,13 @@ text = "1"
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/ForegroundContainer"]
 layout_mode = 2
+theme_override_constants/margin_top = 8
 
 [node name="Letter" type="Label" parent="MarginContainer/ForegroundContainer/MarginContainer2"]
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 34
 text = "A"
 horizontal_alignment = 1
 vertical_alignment = 1

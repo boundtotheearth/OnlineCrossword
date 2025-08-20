@@ -1,11 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwln3ctc1xxek"]
+[gd_scene load_steps=9 format=3 uid="uid://cwln3ctc1xxek"]
 
-[ext_resource type="Theme" uid="uid://d0h6db1vobl53" path="res://DefaultTheme.tres" id="1_cm0pq"]
+[ext_resource type="Theme" uid="uid://c54fkr63shbj" path="res://DefaultTheme.tres" id="1_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dfl7s7q8ag6ms" path="res://Components/ClueContainer.tscn" id="2_cm0pq"]
 [ext_resource type="Script" uid="uid://c6giepbncthhw" path="res://Crossword.gd" id="2_fos0i"]
 [ext_resource type="Script" uid="uid://cqbvgdyjebsi8" path="res://Clues.gd" id="3_3dxm6"]
 [ext_resource type="Script" uid="uid://dfdt0ttbrkg60" path="res://Board.gd" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://68cxd5ein8rr" path="res://Components/Cell.tscn" id="4_cm0pq"]
+[ext_resource type="Script" uid="uid://dixm5f0ps7kfv" path="res://WebsocketClient.gd" id="7_lgr22"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
 content_margin_left = 10.0
@@ -111,3 +112,7 @@ text = "Lorem Ipsum"
 
 [node name="TextEdit" type="TextEdit" parent="Window/Main/Chat"]
 layout_mode = 2
+
+[node name="WebsocketClient" type="Node" parent="."]
+script = ExtResource("7_lgr22")
+websocket_url = "ws://localhost:8765"

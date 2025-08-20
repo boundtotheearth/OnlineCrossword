@@ -46,6 +46,10 @@ func primary_select():
 	is_secondary_selected = false
 
 func secondary_select():
+	# Primary select takes priority
+	if (is_primary_selected):
+		return
+		
 	_cancel_tweens()
 	var duration = 0.07
 	active_tween = create_tween().set_parallel()
