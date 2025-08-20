@@ -1,11 +1,26 @@
-[gd_scene format=3 uid="uid://cyrk4wcenl756"]
+[gd_scene load_steps=2 format=3 uid="uid://cyrk4wcenl756"]
 
-[node name="Clue" type="HBoxContainer"]
+[ext_resource type="Script" uid="uid://crq0xmn7b3cib" path="res://Components/Clue.gd" id="1_cgbwh"]
+
+[node name="Clue" type="HBoxContainer" node_paths=PackedStringArray("number", "text")]
+offset_right = 200.0
+offset_bottom = 283.0
+size_flags_horizontal = 3
+script = ExtResource("1_cgbwh")
+number = NodePath("ClueNumber")
+text = NodePath("ClueText")
 
 [node name="ClueNumber" type="Label" parent="."]
 layout_mode = 2
-text = "1."
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "4."
 
 [node name="ClueText" type="Label" parent="."]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Lorem Ipsum"
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "This is a clue. This is a clue. This is a clue"
+autowrap_mode = 3

@@ -1,23 +1,139 @@
-[gd_scene load_steps=2 format=3 uid="uid://68cxd5ein8rr"]
+[gd_scene load_steps=13 format=3 uid="uid://68cxd5ein8rr"]
 
-[ext_resource type="Theme" uid="uid://cvbgw8ftkgksc" path="res://CellTheme.tres" id="1_dm3fp"]
+[ext_resource type="Script" uid="uid://dblgb2i7n5im5" path="res://Components/Cell.gd" id="1_dm3fp"]
 
-[node name="Cell" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3al32"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x5vg2"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vobtm"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dw2ce"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxa52"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_25o4h"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coc87"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hwrlw"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nk3ba"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dm3fp"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sernc"]
+bg_color = Color(0, 0, 0, 0)
+
+[node name="Cell" type="Control" node_paths=PackedStringArray("button", "number", "letter", "lock", "foreground_container", "foreground", "background")]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 32.0
-offset_bottom = 32.0
-theme = ExtResource("1_dm3fp")
+offset_right = 58.0
+offset_bottom = 58.0
+script = ExtResource("1_dm3fp")
+button = NodePath("Button")
+number = NodePath("MarginContainer/ForegroundContainer/MarginContainer/Number")
+letter = NodePath("MarginContainer/ForegroundContainer/MarginContainer2/Letter")
+lock = NodePath("Lock")
+foreground_container = NodePath("MarginContainer/ForegroundContainer")
+foreground = NodePath("MarginContainer/ForegroundContainer/Foreground")
+background = NodePath("Background")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.164706, 0.164706, 0.164706, 1)
 
-[node name="Label" type="Label" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="Depth" type="ColorRect" parent="MarginContainer"]
+layout_mode = 2
+color = Color(0.788235, 0.360784, 0.713726, 1)
+
+[node name="ForegroundContainer" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Foreground" type="ColorRect" parent="MarginContainer/ForegroundContainer"]
+layout_mode = 2
+color = Color(0.968627, 0.968627, 0.968627, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ForegroundContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Number" type="Label" parent="MarginContainer/ForegroundContainer/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "1"
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/ForegroundContainer"]
+layout_mode = 2
+
+[node name="Letter" type="Label" parent="MarginContainer/ForegroundContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_3al32")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_x5vg2")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vobtm")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_dw2ce")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_cxa52")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_25o4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_coc87")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_hwrlw")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_nk3ba")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_dm3fp")
+theme_override_styles/normal = SubResource("StyleBoxFlat_sernc")
+action_mode = 0
+
+[node name="Lock" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.164706, 0.164706, 0.164706, 1)
+
+[connection signal="pressed" from="Button" to="." method="_cell_pressed"]

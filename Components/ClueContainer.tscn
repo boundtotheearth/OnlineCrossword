@@ -1,0 +1,149 @@
+[gd_scene load_steps=10 format=3 uid="uid://dfl7s7q8ag6ms"]
+
+[ext_resource type="Script" uid="uid://cutfsecej85yh" path="res://Components/ClueContainer.gd" id="1_8ohxj"]
+[ext_resource type="PackedScene" uid="uid://cyrk4wcenl756" path="res://Components/Clue.tscn" id="1_pf6ma"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ohxj"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r0du0"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 3.0
+bg_color = Color(0.968627, 0.968627, 0.968627, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.776471, 0.776471, 0.776471, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fos0i"]
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lmp64"]
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uqveq"]
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3dxm6"]
+content_margin_left = 4.0
+content_margin_top = 1.0
+content_margin_right = 4.0
+content_margin_bottom = 1.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="Theme" id="Theme_cm0pq"]
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_fos0i")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_lmp64")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_uqveq")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_3dxm6")
+
+[node name="AcrossClues" type="PanelContainer" node_paths=PackedStringArray("header_label", "clues_parent")]
+offset_right = 275.0
+offset_bottom = 407.0
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ohxj")
+script = ExtResource("1_8ohxj")
+header_label = NodePath("VBoxContainer/Header")
+header_text = "Across"
+clues_parent = NodePath("VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer")
+clue_instance = ExtResource("1_pf6ma")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Header" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+theme_override_font_sizes/font_size = 26
+text = "Across"
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_r0du0")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme = SubResource("Theme_cm0pq")
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="Clue" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue2" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue3" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue4" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue5" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue6" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue7" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue8" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue9" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue10" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue11" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue12" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue13" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue14" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue15" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue16" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue17" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
+
+[node name="Clue18" parent="VBoxContainer/PanelContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_pf6ma")]
+layout_mode = 2
