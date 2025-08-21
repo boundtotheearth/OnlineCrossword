@@ -17,8 +17,12 @@ class CellType(Enum):
 
 class CellState:
     def __init__(self, current_letter: str = ""):
-        self.current_letter: str = ""
+        self.current_letter: str = current_letter
     
+    @staticmethod
+    def deserialize(data):
+        return CellState(data['current_letter'])
+
     def serialize(self):
         return {
             'current_letter': self.current_letter
@@ -66,6 +70,7 @@ async def echo_server(websocket):
             'type': 'init',
             'puzzle_data': game.puzzle_data
         })
+        print(game.game_state.serialize())
         await send_message(websocket, {
             'type': 'update_game_state',
             'game_state': game.game_state.serialize()
@@ -84,12 +89,12 @@ async def echo_server(websocket):
 async def process_message(websocket, message_dict):
     type = message_dict['type']
     match type:
-        case 'update_cell':
+        case 'update_cell_state':
             await process_update_cell(websocket, message_dict)
 
 async def process_update_cell(websocket, message_dict):
     print(message_dict)
-    game.update_cell_state(message_dict['index'], message_dict['cell_state'])
+    game.update_cell_state(message_dict['index'], CellState.deserialize(message_dict['cell_state']))
     await broadcast_all(message_dict)
 
 async def send_message(websocket, message_dict):

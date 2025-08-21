@@ -11,6 +11,7 @@ extends PanelContainer
 var websocket_client: WebsocketClient
 
 var crossword_data: CrosswordData
+var selected_direction: Globals.Direction
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -27,10 +28,12 @@ func _on_init(data: InitPacket):
 
 func _on_update_cell_state(data: UpdateCellStatePacket):
 	if (board):
-		board.update_cell(data.index, data.letter)
+		board.update_cell(data.index, data.cell_state)
 
 func _on_update_game_state(data: UpdateGameStatePacket):
-	pass
+	if (board):
+		for i in range(data.cell_states.size()):
+			board.update_cell(i, data.cell_states[i])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -55,10 +58,9 @@ func setup(data: CrosswordData):
 		if (not clues.clue_selected.is_connected(_on_clue_selected)):
 			clues.clue_selected.connect(_on_clue_selected)
 
-func _on_cell_selected(cell: Cell):
-	board.select_cell(cell)
-	
-	var clue_data: ClueData = cell.cell_data.clues.get(board.selected_direction)
+func _on_cell_selected(cell: Cell, direction: Globals.Direction):
+	selected_direction = direction
+	var clue_data: ClueData = cell.cell_data.clues.get(direction)
 	if (clue_data):
 		clues.select_clue_number_direction(clue_data.number, clue_data.direction)
 		
@@ -72,16 +74,33 @@ func _on_cell_selected(cell: Cell):
 	else:
 		# Edge case: Cell only has clue in 1 direction
 		var number = cell.cell_data.clues.values()[0].number
-		var direction = cell.cell_data.clues.keys()[0]
-		board.select_cell(cell, false, direction)
-		clues.select_clue_number_direction(cell.cell_data.number, board.selected_direction)
+		var other_direction = cell.cell_data.clues.keys()[0]
+		board.select_cell(cell, false, other_direction)
+		clues.select_clue_number_direction(cell.cell_data.number, other_direction)
 
 func _on_cell_updated(cell: Cell):
-	var update_cell_packet = UpdateCellStatePacket.new(
-		cell.index,
-		cell.cell_state
-	)
-	websocket_client.send_packet(update_cell_packet)
+	_broadcast_update_cell(cell)
+	
+	if (not cell.is_empty()):
+		var other_direction = Globals.get_other_direction(selected_direction)
+		var next_cell: Cell = null
+		next_cell = _get_next_empty_cell_in_clue(cell, selected_direction)
+		if (next_cell):
+			board.select_cell(next_cell)
+			return
+		
+		next_cell = _get_next_empty_clue_cell(cell, selected_direction)
+		if (next_cell):
+			board.select_cell(next_cell)
+			return
+		
+		next_cell = _get_next_empty_clue_cell(cell, other_direction)
+		if (next_cell):
+			board.select_cell(next_cell)
+			return
+
+		#If code reaches here, there are no more empty cells?
+		pass
 
 func _on_clue_selected(clue: Clue):
 	clues.select_clue(clue)
@@ -89,3 +108,36 @@ func _on_clue_selected(clue: Clue):
 	var cell_index = clue.clue_data.indexes[0]
 	board.select_cell_index(cell_index, false, clue.clue_data.direction)
 	
+
+func _broadcast_update_cell(cell: Cell):
+	var update_cell_packet = UpdateCellStatePacket.new(
+		cell.index,
+		cell.cell_state
+	)
+	websocket_client.send_packet(update_cell_packet)
+
+func _get_next_empty_cell_in_clue(cell: Cell, direction: Globals.Direction) -> Cell:
+	var clue: ClueData = cell.cell_data.clues.get(direction)
+	var i = clue.indexes.find(cell.index)
+	for i_offset in range(clue.indexes.size()):
+		var next_i = (i + i_offset) % clue.indexes.size()
+		var next_cell: Cell = board.get_cell(clue.indexes[next_i])
+		if (next_cell and next_cell.is_empty()):
+			return next_cell
+	return null
+
+## Get the first empty cell from the next clue in the direction that contains empty cells
+func _get_next_empty_clue_cell(cell: Cell, direction: Globals.Direction) -> Cell:
+	var clues_in_direction = clues.get_clues_in_direction(direction)
+	var clue_numbers = clues_in_direction.keys()
+	var number = cell.cell_data.clues.get(direction).number
+	var i = clue_numbers.find(number)
+	for i_offset in range(clue_numbers.size()):
+		var next_i = (i + i_offset) % clue_numbers.size()
+		var next_number = clue_numbers[next_i]
+		var clue: Clue = clues_in_direction[next_number]
+		for cell_index in clue.clue_data.indexes:
+			var next_cell: Cell = board.get_cell(cell_index)
+			if (next_cell and next_cell.is_empty()):
+				return next_cell	
+	return null

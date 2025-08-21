@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cwln3ctc1xxek"]
+[gd_scene load_steps=12 format=3 uid="uid://cwln3ctc1xxek"]
 
 [ext_resource type="Theme" uid="uid://c54fkr63shbj" path="res://DefaultTheme.tres" id="1_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dfl7s7q8ag6ms" path="res://Components/ClueContainer.tscn" id="2_cm0pq"]
@@ -9,11 +9,38 @@
 [ext_resource type="Script" uid="uid://dixm5f0ps7kfv" path="res://WebsocketClient.gd" id="8_trn2v"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lgr22"]
 content_margin_left = 10.0
 content_margin_top = 10.0
 content_margin_right = 10.0
 content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03owx"]
 bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trn2v"]
+bg_color = Color(1, 1, 1, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -33,12 +60,41 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cm0pq")
 
-[node name="Main" type="HSplitContainer" parent="Window"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Window"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Window/VBoxContainer"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Window/VBoxContainer/PanelContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+color = Color(0.85098, 0.537255, 0.788235, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+theme_override_font_sizes/font_size = 31
+text = "00:00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Main" type="PanelContainer" parent="Window/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_lgr22")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Window/VBoxContainer/Main"]
 layout_mode = 2
 theme_override_constants/separation = 0
 split_offset = -300
 
-[node name="Crossword" type="PanelContainer" parent="Window/Main" node_paths=PackedStringArray("board", "clues")]
+[node name="Crossword" type="PanelContainer" parent="Window/VBoxContainer/Main/HSplitContainer" node_paths=PackedStringArray("board", "clues")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("2_fos0i")
@@ -46,70 +102,103 @@ debug_data = "{\"puzzleId\":\"daily/2025/08/11\",\"creator\":\"Mary Winslow / Ed
 board = NodePath("HSplitContainer/Board_Panel/CenterContainer/Board")
 clues = NodePath("HSplitContainer/Clues")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Window/Main/Crossword"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 split_offset = 300
 
-[node name="Clues" type="PanelContainer" parent="Window/Main/Crossword/HSplitContainer" node_paths=PackedStringArray("across_clues", "down_clues")]
+[node name="Clues" type="PanelContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer" node_paths=PackedStringArray("across_clues_container", "down_clues_container")]
 layout_mode = 2
 theme = ExtResource("1_cm0pq")
 script = ExtResource("3_3dxm6")
-across_clues = NodePath("VSplitContainer/AcrossClues")
-down_clues = NodePath("VSplitContainer/DownClues")
+across_clues_container = NodePath("VSplitContainer/AcrossClues")
+down_clues_container = NodePath("VSplitContainer/DownClues")
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Window/Main/Crossword/HSplitContainer/Clues"]
+[node name="VSplitContainer" type="VSplitContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Clues"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="AcrossClues" parent="Window/Main/Crossword/HSplitContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
+[node name="AcrossClues" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
 layout_mode = 2
 
-[node name="DownClues" parent="Window/Main/Crossword/HSplitContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
+[node name="DownClues" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
 layout_mode = 2
 header_text = "Down"
 
-[node name="Board_Panel" type="PanelContainer" parent="Window/Main/Crossword/HSplitContainer"]
+[node name="Board_Panel" type="PanelContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="Window/Main/Crossword/HSplitContainer/Board_Panel"]
+[node name="CenterContainer" type="CenterContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel"]
 layout_mode = 2
 
-[node name="Board" type="Control" parent="Window/Main/Crossword/HSplitContainer/Board_Panel/CenterContainer"]
+[node name="Board" type="Control" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel/CenterContainer" node_paths=PackedStringArray("cells_parent")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3_r0du0")
+cells_parent = NodePath("OuterPanel/InnerPanel")
 cell_instance = ExtResource("4_cm0pq")
-cell_size_default = 58
+cell_size_default = 54
 
-[node name="Chat" type="VBoxContainer" parent="Window/Main"]
+[node name="OuterPanel" type="Panel" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel/CenterContainer/Board"]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -405.0
+offset_top = -405.0
+offset_right = 405.0
+offset_bottom = 405.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_03owx")
+
+[node name="InnerPanel" type="Panel" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel/CenterContainer/Board/OuterPanel"]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -405.0
+offset_top = -405.0
+offset_right = 405.0
+offset_bottom = 405.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_trn2v")
+
+[node name="Chat" type="VBoxContainer" parent="Window/VBoxContainer/Main/HSplitContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Window/Main/Chat"]
+[node name="Label" type="Label" parent="Window/VBoxContainer/Main/HSplitContainer/Chat"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
 text = "Chat"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Window/Main/Chat"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Chat"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ChatMessage" type="VBoxContainer" parent="Window/Main/Chat/VBoxContainer"]
+[node name="ChatMessage" type="VBoxContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Chat/VBoxContainer"]
 layout_mode = 2
 
-[node name="Username" type="Label" parent="Window/Main/Chat/VBoxContainer/ChatMessage"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
-text = "Lorem Ipsum"
-
-[node name="Message" type="Label" parent="Window/Main/Chat/VBoxContainer/ChatMessage"]
+[node name="Username" type="Label" parent="Window/VBoxContainer/Main/HSplitContainer/Chat/VBoxContainer/ChatMessage"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
 text = "Lorem Ipsum"
 
-[node name="TextEdit" type="TextEdit" parent="Window/Main/Chat"]
+[node name="Message" type="Label" parent="Window/VBoxContainer/Main/HSplitContainer/Chat/VBoxContainer/ChatMessage"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+text = "Lorem Ipsum"
+
+[node name="TextEdit" type="TextEdit" parent="Window/VBoxContainer/Main/HSplitContainer/Chat"]
 layout_mode = 2
 
 [node name="WebsocketClient" type="Node" parent="."]

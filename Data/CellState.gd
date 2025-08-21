@@ -3,8 +3,13 @@ extends Resource
 
 @export var current_letter: String = ""
 
-static func deserialize() -> CellState:
-	pass
+func _init(current_letter: String = ""):
+	self.current_letter = current_letter
+
+static func deserialize(data: Dictionary) -> CellState:
+	return CellState.new(
+		data['current_letter']
+	)
 
 func serialize() -> Dictionary:
 	return {

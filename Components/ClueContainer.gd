@@ -24,16 +24,7 @@ var active_tween: Tween
 signal clue_selected(clue: Clue)
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	
-	await get_tree().process_frame
-	
-	#Calculate the max scroll offset by trying to scroll by a large amount
-	var initial_scroll_offset = scroll_container.scroll_vertical
-	scroll_container.scroll_vertical = 1000000
-	max_scroll_offset = scroll_container.scroll_vertical
-	scroll_container.scroll_vertical = initial_scroll_offset
-	
+func _ready() -> void:	
 	pass # Replace with function body.
 
 
@@ -62,6 +53,13 @@ func _update_clues():
 		
 		clues_parent.add_child(new_clue)
 		clues.set(number, new_clue)
+	
+	#Calculate the max scroll offset by trying to scroll by a large amount
+	await get_tree().process_frame #Wait for layout calculations to finish
+	var initial_scroll_offset = scroll_container.scroll_vertical
+	scroll_container.scroll_vertical = 1000000
+	max_scroll_offset = scroll_container.scroll_vertical
+	scroll_container.scroll_vertical = initial_scroll_offset
 
 func _on_clue_selected(clue: Clue):
 	clue_selected.emit(clue)
@@ -82,5 +80,6 @@ func scroll_to_clue(clue: Clue):
 		active_tween.kill()
 	
 	var scroll_offset = min(clue.position.y, max_scroll_offset)
+	print(scroll_offset)
 	active_tween = create_tween()
 	active_tween.tween_property(scroll_container, "scroll_vertical", scroll_offset, 0.5).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)

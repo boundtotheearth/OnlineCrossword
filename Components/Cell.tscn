@@ -38,8 +38,8 @@ bg_color = Color(0, 0, 0, 0)
 [node name="Cell" type="Control" node_paths=PackedStringArray("button", "number", "letter", "lock", "foreground_container", "foreground", "background")]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 58.0
-offset_bottom = 58.0
+offset_right = 54.0
+offset_bottom = 54.0
 script = ExtResource("1_dm3fp")
 button = NodePath("Button")
 number = NodePath("MarginContainer/ForegroundContainer/MarginContainer/Number")
@@ -102,7 +102,7 @@ theme_override_constants/margin_top = 8
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -136,4 +136,4 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.164706, 0.164706, 0.164706, 1)
 
-[connection signal="pressed" from="Button" to="." method="_cell_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_pressed"]

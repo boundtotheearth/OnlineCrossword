@@ -57,9 +57,12 @@ func process_packet(packet: String):
 			'init':
 				var init_packet = InitPacket.deserialize(data)
 				init.emit(init_packet)
-			'update_cell':
-				var update_cell_packet = UpdateCellStatePacket.deserialize(data)
-				update_cell_state.emit(update_cell_packet)
+			'update_cell_state':
+				var update_cell_state_packet = UpdateCellStatePacket.deserialize(data)
+				update_cell_state.emit(update_cell_state_packet)
+			'update_game_state':
+				var update_game_state_packet = UpdateGameStatePacket.deserialize(data)
+				update_game_state.emit(update_game_state_packet)
 
 func send_packet(packet: NetworkPacket):
 	send_dict(packet.serialize())

@@ -2,6 +2,7 @@
 class_name Board
 extends Control
 
+@export var cells_parent: Control
 @export var cell_instance: PackedScene
 
 @export var cell_size_default: int = 24
@@ -14,7 +15,7 @@ var primary_selected_cell: Cell
 var secondary_selected_cells: Dictionary[Cell, bool]
 var selected_direction: Globals.Direction = Globals.Direction.ACROSS
 
-signal cell_selected(cell: Cell)
+signal cell_selected(cell: Cell, direction: Globals.Direction)
 signal cell_updated(cell: Cell)
 
 # Called when the node enters the scene tree for the first time.
@@ -28,6 +29,12 @@ func _process(delta: float) -> void:
 func setup(data: CrosswordData):
 	self.crossword_data = data
 	_create_board()
+
+func get_cell(index: int) -> Cell:
+	if (index >= 0 and index < cells.size()):
+		return cells[index]
+	else:
+		return null
 
 func select_cell_index(index: int, toggle: bool = true, direction: Globals.Direction = Globals.Direction.ACROSS):
 	if (index >= 0 and index < cells.size()):
@@ -79,17 +86,19 @@ func select_cell(cell: Cell, toggle: bool = true, direction: Globals.Direction =
 			next_cell.secondary_select()
 			secondary_selected_cells.set(next_cell, true)
 			next_cell = _get_open_cell_in_direction(next_cell.coords, Vector2i(0, -1), 1)
-
-func update_cell(index: int, letter: String, emit: bool = false):
+	
+	cell_selected.emit(primary_selected_cell, selected_direction)
+	
+func update_cell(index: int, cell_state: CellState, emit: bool = false):
 	if (index >= 0 and index < cells.size()):
 		var cell: Cell = cells[index]
-		cell.set_letter(letter)
+		cell.update_state(cell_state)
 		if (emit):
 			cell_updated.emit(cell)
 
 func _create_board():	
-	for child in get_children():
-		remove_child(child)
+	for child in cells_parent.get_children():
+		cells_parent.remove_child(child)
 		child.queue_free()
 	
 	var dimentions = crossword_data.dimentions
@@ -101,20 +110,21 @@ func _create_board():
 		for x in range(dimentions.x):
 			var cell_index = y * dimentions.x + x
 			var new_cell = cell_instance.instantiate() as Cell
-			add_child(new_cell)
+			cells_parent.add_child(new_cell)
+			#new_cell.owner = cells_parent.owner
 			new_cell.name = "Cell%d" % cell_index
 			new_cell.size = Vector2(cell_size_default, cell_size_default)
 			new_cell.global_position = start_position + Vector2(x, y) * cell_size_default
 			new_cell.index = cell_index
 			new_cell.coords = Vector2i(x, y)
 			new_cell.setup(crossword_data.cells[cell_index])
-			new_cell.selected.connect(_on_cell_selected)
+			new_cell.pressed.connect(_on_cell_pressed)
 			
 			cells[cell_index] = new_cell
 	return
 
-func _on_cell_selected(cell: Cell):
-	cell_selected.emit(cell)
+func _on_cell_pressed(cell: Cell):
+	select_cell(cell)
 
 func _on_cell_updated(cell: Cell):
 	cell_updated.emit(cell)
@@ -124,48 +134,48 @@ func _input(event: InputEvent):
 		if (event.physical_keycode >= 65 and event.physical_keycode <= 90):
 			if (primary_selected_cell):
 				var input_char = OS.get_keycode_string(event.physical_keycode)
-				update_cell(primary_selected_cell.index, input_char, true)
-				var next_direction: Vector2i = Globals.direction_to_vector(selected_direction)
-				var next_cell: Cell = _get_open_cell_in_direction(primary_selected_cell.coords, next_direction, 1)
-				if (next_cell):
-					_on_cell_selected(next_cell)
-	
+				update_cell(primary_selected_cell.index, CellState.new(input_char), true)
+				# Next cell selection handled in Crossword
+				# because clue data is required
 		if (event.physical_keycode == KEY_BACKSPACE):
 			if (primary_selected_cell):
-				update_cell(primary_selected_cell.index, "", true)
+				update_cell(primary_selected_cell.index, CellState.new(""), true)
 				var next_direction: Vector2i = -(Globals.direction_to_vector(selected_direction))
 				var next_cell: Cell = _get_open_cell_in_direction(primary_selected_cell.coords, next_direction, 1)
 				if (next_cell):
-					_on_cell_selected(next_cell)
+					select_cell(next_cell)
+				else:
+					select_cell(primary_selected_cell, false)
 	
-	if (event.is_action_pressed("ui_left")):
-		if (selected_direction == Globals.Direction.DOWN):
-			_on_cell_selected(primary_selected_cell)
-		else:
-			var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(-1, 0), crossword_data.dimentions.x)
-			if (next_cell):
-				_on_cell_selected(next_cell)
-	if (event.is_action_pressed("ui_right")):
-		if (selected_direction == Globals.Direction.DOWN):
-			_on_cell_selected(primary_selected_cell)
-		else:
-			var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(1, 0), crossword_data.dimentions.x)
-			if (next_cell):
-				_on_cell_selected(next_cell)
-	if (event.is_action_pressed("ui_up")):
-		if (selected_direction == Globals.Direction.ACROSS):
-			_on_cell_selected(primary_selected_cell)
-		else:
-			var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, -1), crossword_data.dimentions.y)
-			if (next_cell):
-				_on_cell_selected(next_cell)
-	if (event.is_action_pressed("ui_down")):
-		if (selected_direction == Globals.Direction.ACROSS):
-			_on_cell_selected(primary_selected_cell)
-		else:
-			var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, 1), crossword_data.dimentions.y)
-			if (next_cell):
-				_on_cell_selected(next_cell)
+	if (primary_selected_cell):
+		if (event.is_action_pressed("ui_left")):
+			if (selected_direction == Globals.Direction.DOWN):
+				select_cell(primary_selected_cell)
+			else:
+				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(-1, 0), crossword_data.dimentions.x)
+				if (next_cell):
+					select_cell(next_cell)
+		if (event.is_action_pressed("ui_right")):
+			if (selected_direction == Globals.Direction.DOWN):
+				select_cell(primary_selected_cell)
+			else:
+				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(1, 0), crossword_data.dimentions.x)
+				if (next_cell):
+					select_cell(next_cell)
+		if (event.is_action_pressed("ui_up")):
+			if (selected_direction == Globals.Direction.ACROSS):
+				select_cell(primary_selected_cell)
+			else:
+				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, -1), crossword_data.dimentions.y)
+				if (next_cell):
+					select_cell(next_cell)
+		if (event.is_action_pressed("ui_down")):
+			if (selected_direction == Globals.Direction.ACROSS):
+				select_cell(primary_selected_cell)
+			else:
+				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, 1), crossword_data.dimentions.y)
+				if (next_cell):
+					select_cell(next_cell)
 
 func _get_open_cell_in_direction(start: Vector2i, direction: Vector2i, distance: int) -> Cell:
 	var distance_covered = 0

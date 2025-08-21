@@ -21,7 +21,7 @@ var active_tween: Tween
 
 var initial_forground_container_position: Vector2
 
-signal selected(cell: Cell)
+signal pressed(cell: Cell)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -33,9 +33,9 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func _cell_pressed():
+func _on_pressed():
 	# Don't handle the selection here. This is not the only way for a cell to be selected.
-	selected.emit(self)
+	pressed.emit(self)
 
 func primary_select():
 	_cancel_tweens()
@@ -46,6 +46,8 @@ func primary_select():
 	
 	is_primary_selected = true
 	is_secondary_selected = false
+	
+	grab_focus()
 
 func secondary_select():
 	# Primary select takes priority
@@ -89,6 +91,9 @@ func setup(cell_data: CellData):
 		#letter.text = cell_data.answer
 	else:
 		lock.visible = true
+
+func is_empty() -> bool:
+	return cell_state.current_letter == ""
 
 func _cancel_tweens():
 	if (active_tween and active_tween.is_running()):
