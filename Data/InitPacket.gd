@@ -1,7 +1,12 @@
 class_name InitPacket
-extends Resource
+extends NetworkPacket
 
-@export var crossword_data_json: Dictionary
+@export var puzzle_data: Dictionary
 
-func parse(packet: Dictionary):
-	crossword_data_json = packet.get('crossword_data', {})
+func _init(puzzle_data: Dictionary = {}) -> void:
+	self.type = "init"
+	self.puzzle_data = puzzle_data
+
+static func deserialize(packet: Dictionary) -> InitPacket:
+	var instance = InitPacket.new(packet.get('puzzle_data', {}))
+	return instance

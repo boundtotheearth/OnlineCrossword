@@ -8,6 +8,8 @@ extends Node
 var socket = WebSocketPeer.new()
 
 signal init(data: InitPacket) # Initialize game using data from server
+signal update_cell_state(data: UpdateCellStatePacket)
+signal update_game_state(data: UpdateGameStatePacket)
 
 func _ready():
 	# Initiate connection to the given URL.
@@ -18,9 +20,6 @@ func _ready():
 	else:
 		# Wait for the socket to connect.
 		await get_tree().create_timer(2).timeout
-
-		# Send data.
-		socket.send_text("Test packet")
 
 func _process(_delta):
 	# Call this in _process or _physics_process. Data transfer and state updates
@@ -56,9 +55,14 @@ func process_packet(packet: String):
 	if (data):
 		match(data['type']):
 			'init':
-				var init_packet = InitPacket.new()
-				init_packet.parse(data)
+				var init_packet = InitPacket.deserialize(data)
 				init.emit(init_packet)
+			'update_cell':
+				var update_cell_packet = UpdateCellStatePacket.deserialize(data)
+				update_cell_state.emit(update_cell_packet)
 
-func send_packet(packet: Dictionary):
+func send_packet(packet: NetworkPacket):
+	send_dict(packet.serialize())
+
+func send_dict(packet: Dictionary):
 	socket.send_text(JSON.stringify(packet))

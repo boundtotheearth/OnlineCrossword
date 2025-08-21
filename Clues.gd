@@ -29,8 +29,10 @@ func setup(crossword_data: CrosswordData):
 	across_clues.setup(across_clue_data)
 	down_clues.setup(down_clue_data)
 	
-	across_clues.clue_selected.connect(_on_clue_selected)
-	down_clues.clue_selected.connect(_on_clue_selected)
+	if (not across_clues.clue_selected.is_connected(_on_clue_selected)):
+		across_clues.clue_selected.connect(_on_clue_selected)
+	if (not down_clues.clue_selected.is_connected(_on_clue_selected)):
+		down_clues.clue_selected.connect(_on_clue_selected)
 
 func select_clue(clue: Clue):
 	select_clue_number_direction(clue.clue_data.number, clue.clue_data.direction)
@@ -60,6 +62,3 @@ func scroll_to_clue_number_direction(number: int, direction: Globals.Direction):
 	
 func _on_clue_selected(clue: Clue):
 	clue_selected.emit(clue)
-
-func _smooth_scroll_to_control(control: Control):
-	pass

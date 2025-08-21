@@ -11,6 +11,8 @@ extends Control
 @export var background: ColorRect
 
 var cell_data: CellData
+var cell_state: CellState
+
 var is_primary_selected: bool = false
 var is_secondary_selected: bool = false
 var index: int = 0
@@ -23,7 +25,7 @@ signal selected(cell: Cell)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
+	cell_state = CellState.new()
 	await get_tree().process_frame # Wait for container layout to finish
 	initial_forground_container_position = foreground_container.position
 
@@ -68,7 +70,15 @@ func unselect():
 	
 	is_primary_selected = false
 	is_secondary_selected = false
-	
+
+func set_letter(char: String):
+	letter.text = char
+	cell_state.current_letter = char
+
+func update_state(state: CellState):
+	cell_state = state
+	letter.text = cell_state.current_letter
+
 func setup(cell_data: CellData):
 	self.cell_data = cell_data
 	if (cell_data.type == Globals.CellType.OPEN):
@@ -76,7 +86,7 @@ func setup(cell_data: CellData):
 			number.text = str(cell_data.number)
 		else:
 			number.text = ""
-		letter.text = cell_data.answer
+		#letter.text = cell_data.answer
 	else:
 		lock.visible = true
 
