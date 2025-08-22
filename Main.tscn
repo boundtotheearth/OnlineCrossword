@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cwln3ctc1xxek"]
+[gd_scene load_steps=18 format=3 uid="uid://cwln3ctc1xxek"]
 
 [ext_resource type="Theme" uid="uid://c54fkr63shbj" path="res://DefaultTheme.tres" id="1_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dfl7s7q8ag6ms" path="res://Components/ClueContainer.tscn" id="2_cm0pq"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://dfdt0ttbrkg60" path="res://Board.gd" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://68cxd5ein8rr" path="res://Components/Cell.tscn" id="4_cm0pq"]
 [ext_resource type="Script" uid="uid://cyld4iou65gup" path="res://CurrentClue.gd" id="5_trn2v"]
+[ext_resource type="Script" uid="uid://mbkgjwvijnbv" path="res://Login.gd" id="8_03owx"]
 [ext_resource type="Script" uid="uid://dixm5f0ps7kfv" path="res://WebsocketClient.gd" id="8_trn2v"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
@@ -24,6 +25,8 @@ content_margin_bottom = 10.0
 bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_20pc6"]
+content_margin_left = 80.0
+content_margin_right = 80.0
 bg_color = Color(0.968627, 0.968627, 0.968627, 1)
 border_width_left = 1
 border_width_top = 1
@@ -59,6 +62,16 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 anti_aliasing = false
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5vvyt"]
+bg_color = Color(0.85098, 0.537255, 0.788235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c6i3y"]
+bg_color = Color(0.164706, 0.164706, 0.164706, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
 [node name="Game" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -68,7 +81,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_cm0pq")
 
-[node name="Window" type="PanelContainer" parent="."]
+[node name="Main" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -77,21 +90,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cm0pq")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Window"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Main"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="Window/VBoxContainer"]
+[node name="Header" type="PanelContainer" parent="Main/VBoxContainer"]
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="Window/VBoxContainer/PanelContainer"]
+[node name="ColorRect" type="ColorRect" parent="Main/VBoxContainer/Header"]
 layout_mode = 2
 color = Color(0.85098, 0.537255, 0.788235, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/VBoxContainer/Header"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Window/VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Main/VBoxContainer/Header/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -101,7 +114,7 @@ text = "00:00:00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Crossword" type="PanelContainer" parent="Window/VBoxContainer" node_paths=PackedStringArray("board", "clues", "current_clue")]
+[node name="Crossword" type="PanelContainer" parent="Main/VBoxContainer" node_paths=PackedStringArray("board", "clues", "current_clue")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -112,12 +125,12 @@ board = NodePath("HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterCont
 clues = NodePath("HBoxContainer/Clues")
 current_clue = NodePath("HBoxContainer/Board_Panel/VBoxContainer/CurrentClue")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer/Crossword"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/VBoxContainer/Crossword"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="Clues" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer" node_paths=PackedStringArray("across_clues_container", "down_clues_container")]
+[node name="Clues" type="PanelContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer" node_paths=PackedStringArray("across_clues_container", "down_clues_container")]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_cm0pq")
@@ -125,64 +138,66 @@ script = ExtResource("3_3dxm6")
 across_clues_container = NodePath("VSplitContainer/AcrossClues")
 down_clues_container = NodePath("VSplitContainer/DownClues")
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Clues"]
+[node name="VSplitContainer" type="VSplitContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer/Clues"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="AcrossClues" parent="Window/VBoxContainer/Crossword/HBoxContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
+[node name="AcrossClues" parent="Main/VBoxContainer/Crossword/HBoxContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
 layout_mode = 2
 
-[node name="DownClues" parent="Window/VBoxContainer/Crossword/HBoxContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
+[node name="DownClues" parent="Main/VBoxContainer/Crossword/HBoxContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
 layout_mode = 2
 header_text = "Down"
 
-[node name="Board_Panel" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer"]
+[node name="Board_Panel" type="PanelContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel"]
 layout_mode = 2
 
-[node name="CurrentClue" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer" node_paths=PackedStringArray("clue_label")]
+[node name="CurrentClue" type="PanelContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer" node_paths=PackedStringArray("clue_label")]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_wkp8b")
 script = ExtResource("5_trn2v")
 clue_label = NodePath("PanelContainer/Label")
 
-[node name="PanelContainer" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/CurrentClue"]
+[node name="PanelContainer" type="PanelContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/CurrentClue"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_20pc6")
 
-[node name="Label" type="Label" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/CurrentClue/PanelContainer"]
+[node name="Label" type="Label" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/CurrentClue/PanelContainer"]
+custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
-text = "This is a clue"
+text = "This is a clue This is a clue This is a clue This is a clue This is a clue This is a clue This is a clue This is a clue This is a clue "
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
-[node name="Board_Panel" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer"]
+[node name="Board_Panel" type="PanelContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 13.0
+size_flags_stretch_ratio = 10.0
 
-[node name="CenterContainer" type="CenterContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel"]
+[node name="CenterContainer" type="CenterContainer" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Board" type="Control" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer" node_paths=PackedStringArray("cells_parent", "border")]
+[node name="Board" type="Control" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer" node_paths=PackedStringArray("cells_parent", "border")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3_r0du0")
 cells_parent = NodePath("Border/Cells")
 border = NodePath("Border")
 cell_instance = ExtResource("4_cm0pq")
-cell_size_default = 52
+cell_size_default = 50
 
-[node name="Border" type="Panel" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer/Board"]
+[node name="Border" type="Panel" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer/Board"]
 clip_children = 2
 layout_mode = 1
 anchors_preset = 8
@@ -190,15 +205,15 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -390.0
-offset_top = -390.0
-offset_right = 390.0
-offset_bottom = 390.0
+offset_left = -375.0
+offset_top = -375.0
+offset_right = 375.0
+offset_bottom = 375.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_trn2v")
 
-[node name="Cells" type="Panel" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer/Board/Border"]
+[node name="Cells" type="Panel" parent="Main/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer/Board/Border"]
 clip_children = 2
 layout_mode = 1
 anchors_preset = 8
@@ -206,14 +221,123 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -390.0
-offset_top = -390.0
-offset_right = 390.0
-offset_bottom = 390.0
+offset_left = -375.0
+offset_top = -375.0
+offset_right = 375.0
+offset_bottom = 375.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_03owx")
 
+[node name="Login" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5vvyt")
+script = ExtResource("8_03owx")
+
+[node name="Title" type="Label" parent="Login"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = -227.0
+offset_right = 154.0
+offset_bottom = -144.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 60
+text = "Crossword"
+
+[node name="InitialsLabel" type="Label" parent="Login"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -151.0
+offset_top = 5.5
+offset_right = -34.0
+offset_bottom = 55.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 36
+text = "Initials"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Login"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = 72.5
+offset_right = 144.0
+offset_bottom = 124.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorLabel" type="Label" parent="Login"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.0
+offset_top = 73.5
+offset_right = -37.0
+offset_bottom = 123.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 36
+text = "Color"
+
+[node name="InitialsLineEdit" type="LineEdit" parent="Login"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -17.0
+offset_top = -1.0
+offset_right = 145.0
+offset_bottom = 57.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 36
+
+[node name="PlayButton" type="Button" parent="Login"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -156.0
+offset_top = 155.0
+offset_right = 156.0
+offset_bottom = 214.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleBoxFlat_c6i3y")
+text = "Play"
+
 [node name="WebsocketClient" type="Node" parent="."]
 script = ExtResource("8_trn2v")
 websocket_url = "ws://localhost:8765"
+
+[connection signal="pressed" from="Login/PlayButton" to="Login" method="_on_play_button_pressed"]

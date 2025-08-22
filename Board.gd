@@ -64,29 +64,29 @@ func select_cell(cell: Cell, toggle: bool = true, direction: Globals.Direction =
 	secondary_selected_cells.clear()
 	
 	if (selected_direction == Globals.Direction.ACROSS):
-		var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(1, 0), 1)
+		var next_cell = get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(1, 0), 1)
 		while (next_cell):
 			next_cell.secondary_select()
 			secondary_selected_cells.set(next_cell, true)
-			next_cell = _get_open_cell_in_direction(next_cell.coords, Vector2i(1, 0), 1)
+			next_cell = get_open_cell_in_direction(next_cell.coords, Vector2i(1, 0), 1)
 		
-		next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(-1, 0), 1)
+		next_cell = get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(-1, 0), 1)
 		while (next_cell):
 			next_cell.secondary_select()
 			secondary_selected_cells.set(next_cell, true)
-			next_cell = _get_open_cell_in_direction(next_cell.coords, Vector2i(-1, 0), 1)
+			next_cell = get_open_cell_in_direction(next_cell.coords, Vector2i(-1, 0), 1)
 	elif (selected_direction == Globals.Direction.DOWN):		
-		var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, 1), 1)
+		var next_cell = get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, 1), 1)
 		while (next_cell):
 			next_cell.secondary_select()
 			secondary_selected_cells.set(next_cell, true)
-			next_cell = _get_open_cell_in_direction(next_cell.coords, Vector2i(0, 1), 1)
+			next_cell = get_open_cell_in_direction(next_cell.coords, Vector2i(0, 1), 1)
 		
-		next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, -1), 1)
+		next_cell = get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, -1), 1)
 		while (next_cell):
 			next_cell.secondary_select()
 			secondary_selected_cells.set(next_cell, true)
-			next_cell = _get_open_cell_in_direction(next_cell.coords, Vector2i(0, -1), 1)
+			next_cell = get_open_cell_in_direction(next_cell.coords, Vector2i(0, -1), 1)
 	
 	cell_selected.emit(primary_selected_cell, selected_direction)
 	
@@ -134,55 +134,7 @@ func _on_cell_pressed(cell: Cell):
 func _on_cell_selected(cell: Cell):
 	pass
 
-func _input(event: InputEvent):
-	if (event is InputEventKey and event.pressed):
-		if (event.physical_keycode >= 65 and event.physical_keycode <= 90):
-			if (primary_selected_cell):
-				var input_char = OS.get_keycode_string(event.physical_keycode)
-				update_cell(primary_selected_cell.index, CellState.new(input_char), true)
-				# Next cell selection handled in Crossword
-				# because clue data is required
-		if (event.physical_keycode == KEY_BACKSPACE):
-			if (primary_selected_cell):
-				update_cell(primary_selected_cell.index, CellState.new(""), true)
-				var next_direction: Vector2i = -(Globals.direction_to_vector(selected_direction))
-				var next_cell: Cell = _get_open_cell_in_direction(primary_selected_cell.coords, next_direction, 1)
-				if (next_cell):
-					select_cell(next_cell)
-				else:
-					select_cell(primary_selected_cell, false)
-	
-	if (primary_selected_cell):
-		if (event.is_action_pressed("ui_left")):
-			if (selected_direction == Globals.Direction.DOWN):
-				select_cell(primary_selected_cell)
-			else:
-				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(-1, 0), crossword_data.dimentions.x)
-				if (next_cell):
-					select_cell(next_cell)
-		if (event.is_action_pressed("ui_right")):
-			if (selected_direction == Globals.Direction.DOWN):
-				select_cell(primary_selected_cell)
-			else:
-				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(1, 0), crossword_data.dimentions.x)
-				if (next_cell):
-					select_cell(next_cell)
-		if (event.is_action_pressed("ui_up")):
-			if (selected_direction == Globals.Direction.ACROSS):
-				select_cell(primary_selected_cell)
-			else:
-				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, -1), crossword_data.dimentions.y)
-				if (next_cell):
-					select_cell(next_cell)
-		if (event.is_action_pressed("ui_down")):
-			if (selected_direction == Globals.Direction.ACROSS):
-				select_cell(primary_selected_cell)
-			else:
-				var next_cell = _get_open_cell_in_direction(primary_selected_cell.coords, Vector2i(0, 1), crossword_data.dimentions.y)
-				if (next_cell):
-					select_cell(next_cell)
-
-func _get_open_cell_in_direction(start: Vector2i, direction: Vector2i, distance: int) -> Cell:
+func get_open_cell_in_direction(start: Vector2i, direction: Vector2i, distance: int) -> Cell:
 	var distance_covered = 0
 	var next = start + direction
 	var next_index = next.y * crossword_data.dimentions.x + next.x

@@ -6,6 +6,9 @@ extends Node
 
 # Our WebSocketClient instance.
 var socket = WebSocketPeer.new()
+var player_id = ""
+var player_name = ""
+var player_color = ""
 
 signal init(data: InitPacket) # Initialize game using data from server
 signal update_cell_state(data: UpdateCellStatePacket)

@@ -12,8 +12,10 @@ content_margin_bottom = 7.0
 bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="SystemFont" id="SystemFont_cgbwh"]
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_ltu8h"]
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8jovp"]
 bg_color = Color(0, 0, 0, 0)

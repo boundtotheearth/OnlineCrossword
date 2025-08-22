@@ -1,0 +1,18 @@
+Refactor:
+	Change all data to state
+		Move all signals to state
+	Use themes
+		
+Bugs:
+	Top row cells clipped when selected
+
+Features:
+	Timer or Title
+	Currently connected players
+	Other player's cursors
+	Letter attributions
+	!! Menu/Login (initials + color)
+		Online integration
+	API Scrapping
+	Dynamic Board Size
+	Contribution style guide

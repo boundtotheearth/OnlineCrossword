@@ -13,6 +13,7 @@ var websocket_client: WebsocketClient
 
 var crossword_data: CrosswordData
 var selected_direction: Globals.Direction
+var selected_cell: Cell
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -61,9 +62,11 @@ func setup(data: CrosswordData):
 		if (not clues.clue_pressed.is_connected(_on_clue_pressed)):
 			clues.clue_pressed.connect(_on_clue_pressed)
 	
+	await get_tree().process_frame # Let layout calculations finish
 	board.select_cell_index(0)
 
 func _on_cell_selected(cell: Cell, direction: Globals.Direction):
+	selected_cell = cell
 	selected_direction = direction
 	var clue_data: ClueData = cell.cell_data.clues.get(direction)
 	if (clue_data):
@@ -82,32 +85,8 @@ func _on_cell_selected(cell: Cell, direction: Globals.Direction):
 func _on_cell_updated(cell: Cell, should_broadcast: bool):
 	if (should_broadcast):
 		_broadcast_update_cell(cell)
-	
-	if (not cell.is_empty()):
-		var other_direction = Globals.get_other_direction(selected_direction)
-		var next_cell: Cell = null
-		next_cell = _get_next_empty_cell_in_clue(cell, selected_direction)
-		if (next_cell):
-			board.select_cell(next_cell)
-			return
-		
-		next_cell = _get_next_empty_clue_cell(cell, selected_direction)
-		if (next_cell):
-			board.select_cell(next_cell)
-			return
-		
-		next_cell = _get_next_empty_clue_cell(cell, other_direction)
-		if (next_cell):
-			board.select_cell(next_cell)
-			return
-
-		#If code reaches here, there are no more empty cells?
-		pass
 
 func _on_clue_selected(clue: Clue):	
-	#var cell_index = clue.clue_data.indexes[0]
-	#board.select_cell_index(cell_index, false, clue.clue_data.direction)
-	
 	current_clue.update_clue(clue.clue_data)
 
 func _on_clue_pressed(clue: Clue):
@@ -121,15 +100,94 @@ func _broadcast_update_cell(cell: Cell):
 	)
 	websocket_client.send_packet(update_cell_packet)
 
-func _get_next_empty_cell_in_clue(cell: Cell, direction: Globals.Direction) -> Cell:
+func _input(event: InputEvent):
+	if (event is InputEventKey and event.pressed):
+		if (event.physical_keycode >= 65 and event.physical_keycode <= 90):
+			if (selected_cell):
+				var was_empty = selected_cell.is_empty()
+				var input_char = OS.get_keycode_string(event.physical_keycode)
+				
+				board.update_cell(selected_cell.index, CellState.new(input_char), true)
+				
+				var next_cell: Cell
+				if (was_empty):
+					next_cell = _get_next_empty_cell(selected_cell)
+				else:
+					next_cell = _get_next_cell_in_clue(selected_cell, selected_direction)
+				board.select_cell(next_cell)
+
+		if (event.physical_keycode == KEY_BACKSPACE):
+			if (selected_cell):
+				board.update_cell(selected_cell.index, CellState.new(""), true)
+				var next_direction: Vector2i = -(Globals.direction_to_vector(selected_direction))
+				var next_cell: Cell = board.get_open_cell_in_direction(selected_cell.coords, next_direction, 1)
+				if (next_cell):
+					board.select_cell(next_cell)
+				else:
+					board.select_cell(selected_cell, false, selected_direction)
+	
+	if (selected_cell):
+		if (event.is_action_pressed("ui_left")):
+			if (selected_direction == Globals.Direction.DOWN):
+				board.select_cell(selected_cell)
+			else:
+				var next_cell = board.get_open_cell_in_direction(selected_cell.coords, Vector2i(-1, 0), crossword_data.dimentions.x)
+				if (next_cell):
+					board.select_cell(next_cell)
+		if (event.is_action_pressed("ui_right")):
+			if (selected_direction == Globals.Direction.DOWN):
+				board.select_cell(selected_cell)
+			else:
+				var next_cell = board.get_open_cell_in_direction(selected_cell.coords, Vector2i(1, 0), crossword_data.dimentions.x)
+				if (next_cell):
+					board.select_cell(next_cell)
+		if (event.is_action_pressed("ui_up")):
+			if (selected_direction == Globals.Direction.ACROSS):
+				board.select_cell(selected_cell)
+			else:
+				var next_cell = board.get_open_cell_in_direction(selected_cell.coords, Vector2i(0, -1), crossword_data.dimentions.y)
+				if (next_cell):
+					board.select_cell(next_cell)
+		if (event.is_action_pressed("ui_down")):
+			if (selected_direction == Globals.Direction.ACROSS):
+				board.select_cell(selected_cell)
+			else:
+				var next_cell = board.get_open_cell_in_direction(selected_cell.coords, Vector2i(0, 1), crossword_data.dimentions.y)
+				if (next_cell):
+					board.select_cell(next_cell)
+
+func _get_next_empty_cell(cell: Cell) -> Cell:
+	var other_direction = Globals.get_other_direction(selected_direction)
+	var next_cell: Cell = null
+	next_cell = _get_next_empty_cell_in_clue(cell, selected_direction)
+	if (next_cell):
+		return next_cell
+	
+	next_cell = _get_next_empty_clue_cell(cell, selected_direction)
+	if (next_cell):
+		return next_cell
+	
+	next_cell = _get_next_empty_clue_cell(cell, other_direction)
+	if (next_cell):
+		return next_cell
+
+	#If code reaches here, there are no more empty cells?
+	return null
+
+func _get_next_cell_in_clue(cell: Cell, direction) -> Cell:
 	var clue: ClueData = cell.cell_data.clues.get(direction)
 	var i = clue.indexes.find(cell.index)
-	for i_offset in range(clue.indexes.size()):
-		var next_i = (i + i_offset) % clue.indexes.size()
-		var next_cell: Cell = board.get_cell(clue.indexes[next_i])
-		if (next_cell and next_cell.is_empty()):
-			return next_cell
-	return null
+	var next_i = (i + 1) % clue.indexes.size()
+	var next_cell: Cell = board.get_cell(clue.indexes[next_i])
+	return next_cell
+
+func _get_next_empty_cell_in_clue(cell: Cell, direction: Globals.Direction) -> Cell:
+	var next_cell: Cell = cell
+	while (not next_cell.is_empty()):
+		next_cell = _get_next_cell_in_clue(next_cell, direction)
+		if (next_cell == cell): # Looped back
+			return null
+	return next_cell
 
 ## Get the first empty cell from the next clue in the direction that contains empty cells
 func _get_next_empty_clue_cell(cell: Cell, direction: Globals.Direction) -> Cell:
@@ -141,8 +199,9 @@ func _get_next_empty_clue_cell(cell: Cell, direction: Globals.Direction) -> Cell
 		var next_i = (i + i_offset) % clue_numbers.size()
 		var next_number = clue_numbers[next_i]
 		var clue: Clue = clues_in_direction[next_number]
-		for cell_index in clue.clue_data.indexes:
-			var next_cell: Cell = board.get_cell(cell_index)
-			if (next_cell and next_cell.is_empty()):
-				return next_cell	
+		var first_cell = board.get_cell(clue.clue_data.indexes[0])
+		var next_cell = _get_next_empty_cell_in_clue(first_cell, direction)
+		if (next_cell):
+			return next_cell
+			
 	return null
