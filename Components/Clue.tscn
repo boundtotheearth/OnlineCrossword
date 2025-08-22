@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cyrk4wcenl756"]
+[gd_scene load_steps=17 format=3 uid="uid://cyrk4wcenl756"]
 
 [ext_resource type="Script" uid="uid://crq0xmn7b3cib" path="res://Components/Clue.gd" id="1_cgbwh"]
 
@@ -10,6 +10,10 @@ content_margin_left = 19.0
 content_margin_top = 7.0
 content_margin_bottom = 7.0
 bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="SystemFont" id="SystemFont_cgbwh"]
+
+[sub_resource type="SystemFont" id="SystemFont_ltu8h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8jovp"]
 bg_color = Color(0, 0, 0, 0)
@@ -83,6 +87,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("SystemFont_cgbwh")
 text = "4."
 
 [node name="ClueText" type="Label" parent="PanelContainer/HBoxContainer"]
@@ -91,6 +96,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("SystemFont_ltu8h")
 text = "This is a clue. This is a clue. This is a clue"
 autowrap_mode = 3
 

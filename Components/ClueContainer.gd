@@ -21,7 +21,7 @@ var clues: Dictionary[int, Clue]
 var max_scroll_offset: float = 0
 var active_tween: Tween
 
-signal clue_selected(clue: Clue)
+signal clue_pressed(clue: Clue)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:	
@@ -48,7 +48,7 @@ func _update_clues():
 	for number in clue_datas:
 		var clue = clue_datas[number]
 		var new_clue = clue_instance.instantiate() as Clue
-		new_clue.selected.connect(_on_clue_selected)
+		new_clue.pressed.connect(_on_clue_pressed)
 		new_clue.setup(clue)
 		
 		clues_parent.add_child(new_clue)
@@ -61,25 +61,21 @@ func _update_clues():
 	max_scroll_offset = scroll_container.scroll_vertical
 	scroll_container.scroll_vertical = initial_scroll_offset
 
-func _on_clue_selected(clue: Clue):
-	clue_selected.emit(clue)
-	
+func _on_clue_pressed(clue: Clue):
+	clue_pressed.emit(clue)
+
 func get_clue(number: int):
 	return clues.get(number)
 
-func select_clue(number: int) -> Clue:
-	var clue = clues.get(number)
-	if (clue):
-		clue.select()
-		scroll_to_clue(clue)
-		return clue
-	return null
-	
 func scroll_to_clue(clue: Clue):
 	if (active_tween):
 		active_tween.kill()
-	
+
+	var position_offset = clue.global_position.y - scroll_container.global_position.y
+	if (position_offset > 0 and position_offset < scroll_container.size.y - clue.size.y):
+		# Clue Already Visible in Scroll Container
+		return
+
 	var scroll_offset = min(clue.position.y, max_scroll_offset)
-	print(scroll_offset)
 	active_tween = create_tween()
 	active_tween.tween_property(scroll_container, "scroll_vertical", scroll_offset, 0.5).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)

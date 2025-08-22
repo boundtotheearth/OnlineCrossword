@@ -7,6 +7,7 @@ extends PanelContainer
 
 @export var board: Board
 @export var clues: Clues
+@export var current_clue: CurrentClue
 
 var websocket_client: WebsocketClient
 
@@ -28,12 +29,12 @@ func _on_init(data: InitPacket):
 
 func _on_update_cell_state(data: UpdateCellStatePacket):
 	if (board):
-		board.update_cell(data.index, data.cell_state)
+		board.update_cell(data.index, data.cell_state, false)
 
 func _on_update_game_state(data: UpdateGameStatePacket):
 	if (board):
 		for i in range(data.cell_states.size()):
-			board.update_cell(i, data.cell_states[i])
+			board.update_cell(i, data.cell_states[i], false)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -57,6 +58,10 @@ func setup(data: CrosswordData):
 		clues.setup(crossword_data)
 		if (not clues.clue_selected.is_connected(_on_clue_selected)):
 			clues.clue_selected.connect(_on_clue_selected)
+		if (not clues.clue_pressed.is_connected(_on_clue_pressed)):
+			clues.clue_pressed.connect(_on_clue_pressed)
+	
+	board.select_cell_index(0)
 
 func _on_cell_selected(cell: Cell, direction: Globals.Direction):
 	selected_direction = direction
@@ -64,11 +69,7 @@ func _on_cell_selected(cell: Cell, direction: Globals.Direction):
 	if (clue_data):
 		clues.select_clue_number_direction(clue_data.number, clue_data.direction)
 		
-		var other_direction: Globals.Direction
-		if (clue_data.direction == Globals.Direction.ACROSS):
-			other_direction = Globals.Direction.DOWN
-		elif (clue_data.direction == Globals.Direction.DOWN):
-			other_direction = Globals.Direction.ACROSS
+		var other_direction = Globals.get_other_direction(clue_data.direction)
 		var other_clue_data: ClueData = cell.cell_data.clues.get(other_direction)
 		clues.scroll_to_clue_number_direction(other_clue_data.number, other_direction)
 	else:
@@ -78,8 +79,9 @@ func _on_cell_selected(cell: Cell, direction: Globals.Direction):
 		board.select_cell(cell, false, other_direction)
 		clues.select_clue_number_direction(cell.cell_data.number, other_direction)
 
-func _on_cell_updated(cell: Cell):
-	_broadcast_update_cell(cell)
+func _on_cell_updated(cell: Cell, should_broadcast: bool):
+	if (should_broadcast):
+		_broadcast_update_cell(cell)
 	
 	if (not cell.is_empty()):
 		var other_direction = Globals.get_other_direction(selected_direction)
@@ -102,12 +104,15 @@ func _on_cell_updated(cell: Cell):
 		#If code reaches here, there are no more empty cells?
 		pass
 
-func _on_clue_selected(clue: Clue):
-	clues.select_clue(clue)
+func _on_clue_selected(clue: Clue):	
+	#var cell_index = clue.clue_data.indexes[0]
+	#board.select_cell_index(cell_index, false, clue.clue_data.direction)
 	
+	current_clue.update_clue(clue.clue_data)
+
+func _on_clue_pressed(clue: Clue):
 	var cell_index = clue.clue_data.indexes[0]
 	board.select_cell_index(cell_index, false, clue.clue_data.direction)
-	
 
 func _broadcast_update_cell(cell: Cell):
 	var update_cell_packet = UpdateCellStatePacket.new(

@@ -3,10 +3,11 @@ class_name Board
 extends Control
 
 @export var cells_parent: Control
+@export var border: Control
 @export var cell_instance: PackedScene
 
 @export var cell_size_default: int = 24
-@export_tool_button("Create Board", "Callable") var create_board_button = _create_board
+@export_tool_button("Redraw Board", "Callable") var redraw_board_button = _create_board
 
 var crossword_data: CrosswordData
 var cells: Array[Cell] = []
@@ -16,7 +17,7 @@ var secondary_selected_cells: Dictionary[Cell, bool]
 var selected_direction: Globals.Direction = Globals.Direction.ACROSS
 
 signal cell_selected(cell: Cell, direction: Globals.Direction)
-signal cell_updated(cell: Cell)
+signal cell_updated(cell: Cell, should_broadcast: bool)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -89,12 +90,11 @@ func select_cell(cell: Cell, toggle: bool = true, direction: Globals.Direction =
 	
 	cell_selected.emit(primary_selected_cell, selected_direction)
 	
-func update_cell(index: int, cell_state: CellState, emit: bool = false):
+func update_cell(index: int, cell_state: CellState, should_broadcast: bool):
 	if (index >= 0 and index < cells.size()):
 		var cell: Cell = cells[index]
 		cell.update_state(cell_state)
-		if (emit):
-			cell_updated.emit(cell)
+		cell_updated.emit(cell, should_broadcast)
 
 func _create_board():	
 	for child in cells_parent.get_children():
@@ -105,6 +105,10 @@ func _create_board():
 	var center_position = global_position
 	var board_size = Vector2(dimentions.x, dimentions.y) * cell_size_default
 	var start_position = center_position - (board_size / 2)
+	border.global_position = start_position
+	border.size = board_size
+	cells_parent.global_position = start_position
+	cells_parent.size = board_size
 	cells.resize(dimentions.x * dimentions.y)
 	for y in range(dimentions.y):
 		for x in range(dimentions.x):
@@ -119,6 +123,7 @@ func _create_board():
 			new_cell.coords = Vector2i(x, y)
 			new_cell.setup(crossword_data.cells[cell_index])
 			new_cell.pressed.connect(_on_cell_pressed)
+			new_cell.selected.connect(_on_cell_selected)
 			
 			cells[cell_index] = new_cell
 	return
@@ -126,8 +131,8 @@ func _create_board():
 func _on_cell_pressed(cell: Cell):
 	select_cell(cell)
 
-func _on_cell_updated(cell: Cell):
-	cell_updated.emit(cell)
+func _on_cell_selected(cell: Cell):
+	pass
 
 func _input(event: InputEvent):
 	if (event is InputEventKey and event.pressed):

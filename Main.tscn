@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cwln3ctc1xxek"]
+[gd_scene load_steps=15 format=3 uid="uid://cwln3ctc1xxek"]
 
 [ext_resource type="Theme" uid="uid://c54fkr63shbj" path="res://DefaultTheme.tres" id="1_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dfl7s7q8ag6ms" path="res://Components/ClueContainer.tscn" id="2_cm0pq"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cqbvgdyjebsi8" path="res://Clues.gd" id="3_3dxm6"]
 [ext_resource type="Script" uid="uid://dfdt0ttbrkg60" path="res://Board.gd" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://68cxd5ein8rr" path="res://Components/Cell.tscn" id="4_cm0pq"]
+[ext_resource type="Script" uid="uid://cyld4iou65gup" path="res://CurrentClue.gd" id="5_trn2v"]
 [ext_resource type="Script" uid="uid://dixm5f0ps7kfv" path="res://WebsocketClient.gd" id="8_trn2v"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
@@ -18,24 +19,40 @@ content_margin_right = 10.0
 content_margin_bottom = 10.0
 bg_color = Color(0, 0, 0, 0)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03owx"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wkp8b"]
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_20pc6"]
+bg_color = Color(0.968627, 0.968627, 0.968627, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trn2v"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trn2v"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03owx"]
 bg_color = Color(1, 1, 1, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.666667, 0.666667, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -62,12 +79,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_cm0pq")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Window"]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="PanelContainer" type="PanelContainer" parent="Window/VBoxContainer"]
 layout_mode = 2
 
 [node name="ColorRect" type="ColorRect" parent="Window/VBoxContainer/PanelContainer"]
-custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 color = Color(0.85098, 0.537255, 0.788235, 1)
 
@@ -84,64 +101,88 @@ text = "00:00:00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Main" type="PanelContainer" parent="Window/VBoxContainer"]
+[node name="Crossword" type="PanelContainer" parent="Window/VBoxContainer" node_paths=PackedStringArray("board", "clues", "current_clue")]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_lgr22")
-
-[node name="HSplitContainer" type="HSplitContainer" parent="Window/VBoxContainer/Main"]
-layout_mode = 2
-theme_override_constants/separation = 0
-split_offset = -300
-
-[node name="Crossword" type="PanelContainer" parent="Window/VBoxContainer/Main/HSplitContainer" node_paths=PackedStringArray("board", "clues")]
-layout_mode = 2
-size_flags_horizontal = 3
 script = ExtResource("2_fos0i")
 debug_data = "{\"puzzleId\":\"daily/2025/08/11\",\"creator\":\"Mary Winslow / Ed. Patti Varol\",\"width\":15,\"cells\":[{\"answer\":\"P\",\"number\":\"1\"},{\"answer\":\"E\",\"number\":\"2\"},{\"answer\":\"A\",\"number\":\"3\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"A\",\"number\":\"4\"},{\"answer\":\"L\",\"number\":\"5\"},{\"answer\":\"A\",\"number\":\"6\"},{\"answer\":\"R\",\"number\":\"7\"},{\"answer\":\"M\",\"number\":\"8\"},{\"type\":\"locked\"},{\"answer\":\"S\",\"number\":\"9\"},{\"answer\":\"A\",\"number\":\"10\"},{\"answer\":\"S\",\"number\":\"11\"},{\"answer\":\"H\",\"number\":\"12\"},{\"answer\":\"A\",\"number\":\"13\"},{\"answer\":\"R\"},{\"answer\":\"E\"},{\"answer\":\"S\",\"number\":\"14\"},{\"type\":\"locked\"},{\"answer\":\"N\",\"number\":\"15\"},{\"answer\":\"A\"},{\"answer\":\"M\"},{\"answer\":\"E\"},{\"answer\":\"D\"},{\"type\":\"locked\"},{\"answer\":\"A\",\"number\":\"16\"},{\"answer\":\"N\"},{\"answer\":\"T\"},{\"answer\":\"I\"},{\"answer\":\"D\",\"number\":\"17\"},{\"answer\":\"A\"},{\"answer\":\"R\"},{\"answer\":\"K\"},{\"type\":\"locked\"},{\"answer\":\"G\",\"number\":\"18\"},{\"answer\":\"R\"},{\"answer\":\"A\"},{\"answer\":\"S\"},{\"answer\":\"S\"},{\"answer\":\"S\",\"number\":\"19\"},{\"answer\":\"K\"},{\"answer\":\"I\"},{\"answer\":\"R\"},{\"answer\":\"T\"},{\"type\":\"locked\"},{\"answer\":\"S\",\"number\":\"20\"},{\"answer\":\"O\"},{\"answer\":\"I\"},{\"answer\":\"R\",\"number\":\"21\"},{\"answer\":\"E\"},{\"answer\":\"E\"},{\"answer\":\"S\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"O\",\"number\":\"22\"},{\"answer\":\"S\"},{\"answer\":\"S\"},{\"answer\":\"A\"},{\"type\":\"locked\"},{\"answer\":\"M\",\"number\":\"23\"},{\"answer\":\"U\"},{\"answer\":\"S\"},{\"answer\":\"T\"},{\"answer\":\"A\"},{\"answer\":\"R\"},{\"answer\":\"D\"},{\"answer\":\"S\"},{\"answer\":\"E\",\"number\":\"24\"},{\"answer\":\"E\",\"number\":\"25\"},{\"answer\":\"D\"},{\"type\":\"locked\"},{\"answer\":\"T\",\"number\":\"26\"},{\"answer\":\"N\"},{\"answer\":\"T\",\"number\":\"27\"},{\"answer\":\"O\",\"number\":\"28\"},{\"answer\":\"R\"},{\"answer\":\"O\"},{\"type\":\"locked\"},{\"answer\":\"I\",\"number\":\"29\"},{\"answer\":\"S\"},{\"answer\":\"O\"},{\"type\":\"locked\"},{\"answer\":\"A\",\"number\":\"30\"},{\"answer\":\"L\"},{\"answer\":\"A\"},{\"answer\":\"M\",\"number\":\"31\"},{\"answer\":\"O\"},{\"answer\":\"D\"},{\"answer\":\"E\"},{\"answer\":\"D\",\"number\":\"32\"},{\"answer\":\"E\"},{\"answer\":\"L\"},{\"answer\":\"I\",\"number\":\"33\"},{\"answer\":\"S\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"A\",\"number\":\"34\"},{\"answer\":\"C\"},{\"answer\":\"S\"},{\"type\":\"locked\"},{\"answer\":\"I\",\"number\":\"35\"},{\"answer\":\"N\"},{\"answer\":\"S\"},{\"answer\":\"T\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"D\",\"number\":\"36\"},{\"answer\":\"E\"},{\"answer\":\"C\",\"number\":\"37\"},{\"answer\":\"K\",\"number\":\"38\"},{\"answer\":\"C\"},{\"answer\":\"H\"},{\"answer\":\"A\"},{\"answer\":\"I\",\"number\":\"39\"},{\"answer\":\"R\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"A\",\"number\":\"40\"},{\"answer\":\"P\",\"number\":\"41\"},{\"answer\":\"S\",\"number\":\"42\"},{\"answer\":\"E\"},{\"type\":\"locked\"},{\"answer\":\"A\",\"number\":\"43\"},{\"answer\":\"N\"},{\"answer\":\"T\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"N\",\"number\":\"44\"},{\"answer\":\"A\"},{\"answer\":\"T\",\"number\":\"45\"},{\"answer\":\"C\",\"number\":\"46\"},{\"answer\":\"H\",\"number\":\"47\"},{\"answer\":\"R\",\"number\":\"48\"},{\"answer\":\"E\"},{\"answer\":\"T\"},{\"answer\":\"A\"},{\"answer\":\"S\",\"number\":\"49\"},{\"answer\":\"T\"},{\"answer\":\"E\"},{\"type\":\"locked\"},{\"answer\":\"T\",\"number\":\"50\"},{\"answer\":\"A\",\"number\":\"51\"},{\"answer\":\"E\"},{\"type\":\"locked\"},{\"answer\":\"A\",\"number\":\"52\"},{\"answer\":\"R\"},{\"answer\":\"E\"},{\"answer\":\"P\",\"number\":\"53\"},{\"answer\":\"E\"},{\"answer\":\"R\"},{\"type\":\"locked\"},{\"answer\":\"P\",\"number\":\"54\"},{\"answer\":\"O\"},{\"answer\":\"W\"},{\"answer\":\"E\",\"number\":\"55\"},{\"answer\":\"R\"},{\"answer\":\"B\"},{\"answer\":\"R\"},{\"answer\":\"O\",\"number\":\"56\"},{\"answer\":\"K\"},{\"answer\":\"E\"},{\"answer\":\"R\"},{\"type\":\"locked\"},{\"answer\":\"R\",\"number\":\"57\"},{\"answer\":\"O\"},{\"answer\":\"S\",\"number\":\"58\"},{\"answer\":\"A\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"L\",\"number\":\"59\"},{\"answer\":\"O\"},{\"answer\":\"A\"},{\"answer\":\"T\"},{\"answer\":\"H\"},{\"answer\":\"E\"},{\"answer\":\"D\"},{\"type\":\"locked\"},{\"answer\":\"M\",\"number\":\"60\"},{\"answer\":\"A\"},{\"answer\":\"K\"},{\"answer\":\"E\"},{\"answer\":\"T\"},{\"answer\":\"H\",\"number\":\"61\"},{\"answer\":\"E\",\"number\":\"62\"},{\"answer\":\"C\"},{\"answer\":\"U\"},{\"answer\":\"T\"},{\"type\":\"locked\"},{\"answer\":\"I\",\"number\":\"63\"},{\"answer\":\"S\"},{\"answer\":\"I\"},{\"answer\":\"S\",\"number\":\"64\"},{\"answer\":\"A\",\"number\":\"65\"},{\"answer\":\"G\"},{\"answer\":\"E\"},{\"answer\":\"E\"},{\"type\":\"locked\"},{\"answer\":\"S\",\"number\":\"66\"},{\"answer\":\"N\"},{\"answer\":\"I\"},{\"answer\":\"P\"},{\"answer\":\"E\"},{\"type\":\"locked\"},{\"answer\":\"O\",\"number\":\"67\"},{\"answer\":\"T\"},{\"answer\":\"T\"},{\"answer\":\"O\"},{\"answer\":\"D\",\"number\":\"68\"},{\"answer\":\"E\"},{\"answer\":\"S\"},{\"answer\":\"K\"},{\"type\":\"locked\"},{\"answer\":\"N\",\"number\":\"69\"},{\"answer\":\"O\"},{\"answer\":\"D\"},{\"answer\":\"E\"},{\"answer\":\"S\"},{\"type\":\"locked\"},{\"type\":\"locked\"},{\"answer\":\"O\",\"number\":\"70\"},{\"answer\":\"S\"},{\"answer\":\"S\"}],\"copyright\":\"Daily crosswords provided by the LA Times\\n© 2025 Tribune Content Agency, LLC\",\"description\":\"\",\"words\":[{\"indexes\":[0,1,2],\"direction\":\"across\",\"clue\":\"Split __ soup\"},{\"indexes\":[5,6,7,8,9],\"direction\":\"across\",\"clue\":\"\\\"Time to get up!\\\" noise\"},{\"indexes\":[11,12,13,14],\"direction\":\"across\",\"clue\":\"Ceremonial accoutrement\"},{\"indexes\":[15,16,17,18],\"direction\":\"across\",\"clue\":\"Greek god of war\"},{\"indexes\":[20,21,22,23,24],\"direction\":\"across\",\"clue\":\"Called\"},{\"indexes\":[26,27,28,29],\"direction\":\"across\",\"clue\":\"Not for\"},{\"indexes\":[30,31,32,33],\"direction\":\"across\",\"clue\":\"Not illuminated\"},{\"indexes\":[35,36,37,38,39,40,41,42,43,44],\"direction\":\"across\",\"clue\":\"Hula dancer's bottom\"},{\"indexes\":[46,47,48,49,50,51,52],\"direction\":\"across\",\"clue\":\"Evening parties\"},{\"indexes\":[55,56,57,58],\"direction\":\"across\",\"clue\":\"Mount of Greek legend\"},{\"indexes\":[60,61,62,63,64,65,66,67,68,69,70],\"direction\":\"across\",\"clue\":\"Yellow spice in tangy marinades\"},{\"indexes\":[72,73,74],\"direction\":\"across\",\"clue\":\"Wile E. Coyote's explosive\"},{\"indexes\":[75,76,77],\"direction\":\"across\",\"clue\":\"Spanish gold\"},{\"indexes\":[79,80,81],\"direction\":\"across\",\"clue\":\"Classified ad shorthand\"},{\"indexes\":[83,84,85,86,87,88,89],\"direction\":\"across\",\"clue\":\"With a scoop of ice cream, as pie\"},{\"indexes\":[90,91,92,93,94],\"direction\":\"across\",\"clue\":\"Lunch spots\"},{\"indexes\":[97,98,99],\"direction\":\"across\",\"clue\":\"Cooling systs.\"},{\"indexes\":[101,102,103,104],\"direction\":\"across\",\"clue\":\"Technical sch.\"},{\"indexes\":[108,109,110,111,112,113,114,115,116],\"direction\":\"across\",\"clue\":\"Lounger on an ocean liner\"},{\"indexes\":[120,121,122,123],\"direction\":\"across\",\"clue\":\"Cathedral recess\"},{\"indexes\":[125,126,127],\"direction\":\"across\",\"clue\":\"__ : raisin :: log : celery\"},{\"indexes\":[130,131,132,133,134],\"direction\":\"across\",\"clue\":\"Slangy \\\"For sure!\\\"\"},{\"indexes\":[135,136,137,138,139,140,141],\"direction\":\"across\",\"clue\":\"Have another nibble of\"},{\"indexes\":[143,144,145],\"direction\":\"across\",\"clue\":\"__ kwon do\"},{\"indexes\":[147,148,149],\"direction\":\"across\",\"clue\":\"\\\"And you __?\\\"\"},{\"indexes\":[150,151,152],\"direction\":\"across\",\"clue\":\"A pop\"},{\"indexes\":[154,155,156,157,158,159,160,161,162,163,164],\"direction\":\"across\",\"clue\":\"Influencer with serious clout\"},{\"indexes\":[166,167,168,169],\"direction\":\"across\",\"clue\":\"Civil rights icon Parks\"},{\"indexes\":[172,173,174,175,176,177,178],\"direction\":\"across\",\"clue\":\"Despised with a passion\"},{\"indexes\":[180,181,182,183,184,185,186,187,188,189],\"direction\":\"across\",\"clue\":\"Survive an audition, and what one may do to the start of 18-, 23-, 36-, or 54-Across?\"},{\"indexes\":[191,192,193,194],\"direction\":\"across\",\"clue\":\"Egyptian fertility goddess\"},{\"indexes\":[195,196,197,198],\"direction\":\"across\",\"clue\":\"\\\"A Death in the Family\\\" writer James\"},{\"indexes\":[200,201,202,203,204],\"direction\":\"across\",\"clue\":\"Criticize pettily\"},{\"indexes\":[206,207,208,209],\"direction\":\"across\",\"clue\":\"Director Preminger\"},{\"indexes\":[210,211,212,213],\"direction\":\"across\",\"clue\":\"Worktable\"},{\"indexes\":[215,216,217,218,219],\"direction\":\"across\",\"clue\":\"Lymph __: immune system parts\"},{\"indexes\":[222,223,224],\"direction\":\"across\",\"clue\":\"CIA forerunner\"},{\"indexes\":[0,15,30],\"direction\":\"down\",\"clue\":\"Push-up bra feature\"},{\"indexes\":[1,16,31,46,61,76,91],\"direction\":\"down\",\"clue\":\"Mark of a correction\"},{\"indexes\":[2,17,32,47,62,77,92],\"direction\":\"down\",\"clue\":\"Spray starch dispenser\"},{\"indexes\":[5,20,35,50,65,80],\"direction\":\"down\",\"clue\":\"Makes miffed\"},{\"indexes\":[6,21,36,51,66,81],\"direction\":\"down\",\"clue\":\"Texas border city on the Rio Grande\"},{\"indexes\":[7,22,37,52,67],\"direction\":\"down\",\"clue\":\"Stockpile\"},{\"indexes\":[8,23,38],\"direction\":\"down\",\"clue\":\"Hi-__ photo\"},{\"indexes\":[9,24,39],\"direction\":\"down\",\"clue\":\"Surgeons, e.g., for short\"},{\"indexes\":[11,26,41,56],\"direction\":\"down\",\"clue\":\"__ Off 5th: discount fashion chain\"},{\"indexes\":[12,27,42,57,72,87,102],\"direction\":\"down\",\"clue\":\"Jennifer of \\\"The Morning Show\\\"\"},{\"indexes\":[13,28,43,58,73,88,103],\"direction\":\"down\",\"clue\":\"Hair pieces\"},{\"indexes\":[14,29,44],\"direction\":\"down\",\"clue\":\"Smashing success\"},{\"indexes\":[18,33,48,63],\"direction\":\"down\",\"clue\":\"Comedy sketch\"},{\"indexes\":[40,55,70,85],\"direction\":\"down\",\"clue\":\"Club __: bar mixer\"},{\"indexes\":[49,64,79,94,109],\"direction\":\"down\",\"clue\":\"Pay increase\"},{\"indexes\":[60,75,90],\"direction\":\"down\",\"clue\":\"Forum admin\"},{\"indexes\":[68,83,98,113],\"direction\":\"down\",\"clue\":\"\\\"To __ their own\\\"\"},{\"indexes\":[69,84,99,114],\"direction\":\"down\",\"clue\":\"Anna's \\\"Frozen\\\" sister\"},{\"indexes\":[74,89,104],\"direction\":\"down\",\"clue\":\"Vietnamese celebration that welcomes spring\"},{\"indexes\":[86,101,116,131],\"direction\":\"down\",\"clue\":\"Actress Sorvino\"},{\"indexes\":[93,108,123,138],\"direction\":\"down\",\"clue\":\"Brainchild\"},{\"indexes\":[97,112,127],\"direction\":\"down\",\"clue\":\"\\\"__ your age!\\\"\"},{\"indexes\":[110,125,140,155],\"direction\":\"down\",\"clue\":\"Reformer of ancient Rome\"},{\"indexes\":[111,126,141,156],\"direction\":\"down\",\"clue\":\"Was certain of\"},{\"indexes\":[115,130,145,160,175],\"direction\":\"down\",\"clue\":\"Motionless\"},{\"indexes\":[120,135,150],\"direction\":\"down\",\"clue\":\"Abstract artist Jean\"},{\"indexes\":[121,136,151,166,181,196,211],\"direction\":\"down\",\"clue\":\"British aristocracy\"},{\"indexes\":[122,137,152,167,182,197,212],\"direction\":\"down\",\"clue\":\"Paintbrush marks\"},{\"indexes\":[132,147,162,177,192,207,222],\"direction\":\"down\",\"clue\":\"Becomes smitten with\"},{\"indexes\":[133,148,163,178,193,208,223],\"direction\":\"down\",\"clue\":\"University units\"},{\"indexes\":[134,149,164],\"direction\":\"down\",\"clue\":\"Feminine pronoun\"},{\"indexes\":[139,154,169,184],\"direction\":\"down\",\"clue\":\"Squabble\"},{\"indexes\":[143,158,173,188,203,218],\"direction\":\"down\",\"clue\":\"Company that takes the show on the road\"},{\"indexes\":[144,159,174,189,204,219],\"direction\":\"down\",\"clue\":\"Lets up\"},{\"indexes\":[157,172,187,202,217],\"direction\":\"down\",\"clue\":\"Heroic knight of medieval Spain\"},{\"indexes\":[161,176,191,206],\"direction\":\"down\",\"clue\":\"The Buckeye State\"},{\"indexes\":[168,183,198,213],\"direction\":\"down\",\"clue\":\"Participate in a scavenger hunt\"},{\"indexes\":[180,195,210],\"direction\":\"down\",\"clue\":\"Crazy (about)\"},{\"indexes\":[185,200,215],\"direction\":\"down\",\"clue\":\"QVC alternative\"},{\"indexes\":[186,201,216],\"direction\":\"down\",\"clue\":\"Music producer Brian\"},{\"indexes\":[194,209,224],\"direction\":\"down\",\"clue\":\"\\\"Help!\\\" letters\"}],\"title\":\"Monday’s Daily\"}"
-board = NodePath("HSplitContainer/Board_Panel/CenterContainer/Board")
-clues = NodePath("HSplitContainer/Clues")
+board = NodePath("HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer/Board")
+clues = NodePath("HBoxContainer/Clues")
+current_clue = NodePath("HBoxContainer/Board_Panel/VBoxContainer/CurrentClue")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer/Crossword"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 0
-split_offset = 300
+theme_override_constants/separation = 10
 
-[node name="Clues" type="PanelContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer" node_paths=PackedStringArray("across_clues_container", "down_clues_container")]
+[node name="Clues" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer" node_paths=PackedStringArray("across_clues_container", "down_clues_container")]
 layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("1_cm0pq")
 script = ExtResource("3_3dxm6")
 across_clues_container = NodePath("VSplitContainer/AcrossClues")
 down_clues_container = NodePath("VSplitContainer/DownClues")
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Clues"]
+[node name="VSplitContainer" type="VSplitContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Clues"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="AcrossClues" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
+[node name="AcrossClues" parent="Window/VBoxContainer/Crossword/HBoxContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
 layout_mode = 2
 
-[node name="DownClues" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
+[node name="DownClues" parent="Window/VBoxContainer/Crossword/HBoxContainer/Clues/VSplitContainer" instance=ExtResource("2_cm0pq")]
 layout_mode = 2
 header_text = "Down"
 
-[node name="Board_Panel" type="PanelContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer"]
+[node name="Board_Panel" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
 
-[node name="CenterContainer" type="CenterContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel"]
 layout_mode = 2
 
-[node name="Board" type="Control" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel/CenterContainer" node_paths=PackedStringArray("cells_parent")]
+[node name="CurrentClue" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer" node_paths=PackedStringArray("clue_label")]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_wkp8b")
+script = ExtResource("5_trn2v")
+clue_label = NodePath("PanelContainer/Label")
+
+[node name="PanelContainer" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/CurrentClue"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_20pc6")
+
+[node name="Label" type="Label" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/CurrentClue/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "This is a clue"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Board_Panel" type="PanelContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 13.0
+
+[node name="CenterContainer" type="CenterContainer" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Board" type="Control" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer" node_paths=PackedStringArray("cells_parent", "border")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3_r0du0")
-cells_parent = NodePath("OuterPanel/InnerPanel")
+cells_parent = NodePath("Border/Cells")
+border = NodePath("Border")
 cell_instance = ExtResource("4_cm0pq")
-cell_size_default = 54
+cell_size_default = 52
 
-[node name="OuterPanel" type="Panel" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel/CenterContainer/Board"]
+[node name="Border" type="Panel" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer/Board"]
 clip_children = 2
 layout_mode = 1
 anchors_preset = 8
@@ -149,57 +190,29 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -405.0
-offset_top = -405.0
-offset_right = 405.0
-offset_bottom = 405.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_03owx")
-
-[node name="InnerPanel" type="Panel" parent="Window/VBoxContainer/Main/HSplitContainer/Crossword/HSplitContainer/Board_Panel/CenterContainer/Board/OuterPanel"]
-clip_children = 2
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -405.0
-offset_top = -405.0
-offset_right = 405.0
-offset_bottom = 405.0
+offset_left = -390.0
+offset_top = -390.0
+offset_right = 390.0
+offset_bottom = 390.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_trn2v")
 
-[node name="Chat" type="VBoxContainer" parent="Window/VBoxContainer/Main/HSplitContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Window/VBoxContainer/Main/HSplitContainer/Chat"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
-text = "Chat"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Chat"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ChatMessage" type="VBoxContainer" parent="Window/VBoxContainer/Main/HSplitContainer/Chat/VBoxContainer"]
-layout_mode = 2
-
-[node name="Username" type="Label" parent="Window/VBoxContainer/Main/HSplitContainer/Chat/VBoxContainer/ChatMessage"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
-text = "Lorem Ipsum"
-
-[node name="Message" type="Label" parent="Window/VBoxContainer/Main/HSplitContainer/Chat/VBoxContainer/ChatMessage"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
-text = "Lorem Ipsum"
-
-[node name="TextEdit" type="TextEdit" parent="Window/VBoxContainer/Main/HSplitContainer/Chat"]
-layout_mode = 2
+[node name="Cells" type="Panel" parent="Window/VBoxContainer/Crossword/HBoxContainer/Board_Panel/VBoxContainer/Board_Panel/CenterContainer/Board/Border"]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -390.0
+offset_right = 390.0
+offset_bottom = 390.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_03owx")
 
 [node name="WebsocketClient" type="Node" parent="."]
 script = ExtResource("8_trn2v")

@@ -22,6 +22,7 @@ var active_tween: Tween
 var initial_forground_container_position: Vector2
 
 signal pressed(cell: Cell)
+signal selected(cell: Cell)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -48,6 +49,8 @@ func primary_select():
 	is_secondary_selected = false
 	
 	grab_focus()
+	
+	selected.emit(self)
 
 func secondary_select():
 	# Primary select takes priority
