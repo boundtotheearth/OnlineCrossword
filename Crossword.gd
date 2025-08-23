@@ -125,7 +125,9 @@ func _input(event: InputEvent):
 					board.select_cell(next_cell)
 				else:
 					board.select_cell(selected_cell, false, selected_direction)
-	
+		if (event.physical_keycode == KEY_ESCAPE):
+			
+			pass
 	if (selected_cell):
 		if (event.is_action_pressed("ui_left")):
 			if (selected_direction == Globals.Direction.DOWN):

@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://cwln3ctc1xxek"]
+[gd_scene load_steps=19 format=3 uid="uid://cwln3ctc1xxek"]
 
 [ext_resource type="Theme" uid="uid://c54fkr63shbj" path="res://DefaultTheme.tres" id="1_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dfl7s7q8ag6ms" path="res://Components/ClueContainer.tscn" id="2_cm0pq"]
 [ext_resource type="Script" uid="uid://c6giepbncthhw" path="res://Crossword.gd" id="2_fos0i"]
+[ext_resource type="Script" uid="uid://fd2xpnso8hcc" path="res://Main.gd" id="2_wkp8b"]
 [ext_resource type="Script" uid="uid://cqbvgdyjebsi8" path="res://Clues.gd" id="3_3dxm6"]
 [ext_resource type="Script" uid="uid://dfdt0ttbrkg60" path="res://Board.gd" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://68cxd5ein8rr" path="res://Components/Cell.tscn" id="4_cm0pq"]
@@ -89,6 +90,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cm0pq")
+script = ExtResource("2_wkp8b")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Main"]
 layout_mode = 2
@@ -110,7 +112,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
 theme_override_font_sizes/font_size = 31
-text = "00:00:00"
+text = "Crossword"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -229,7 +231,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_03owx")
 
-[node name="Login" type="Panel" parent="."]
+[node name="Login" type="Panel" parent="." node_paths=PackedStringArray("NameLineEdit", "ColorButton")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -238,6 +240,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5vvyt")
 script = ExtResource("8_03owx")
+NameLineEdit = NodePath("NameLineEdit")
+ColorButton = NodePath("ColorPickerButton")
 
 [node name="Title" type="Label" parent="Login"]
 layout_mode = 1
@@ -256,7 +260,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 60
 text = "Crossword"
 
-[node name="InitialsLabel" type="Label" parent="Login"]
+[node name="NameLabel" type="Label" parent="Login"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -271,7 +275,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 36
-text = "Initials"
+text = "Name"
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="Login"]
 layout_mode = 1
@@ -304,7 +308,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 36
 text = "Color"
 
-[node name="InitialsLineEdit" type="LineEdit" parent="Login"]
+[node name="NameLineEdit" type="LineEdit" parent="Login"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
