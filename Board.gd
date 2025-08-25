@@ -28,7 +28,10 @@ func _process(delta: float) -> void:
 	pass
 	
 func setup(data: CrosswordData):
-	self.crossword_data = data
+	primary_selected_cell = null
+	secondary_selected_cells.clear()
+	selected_direction = Globals.Direction.ACROSS
+	crossword_data = data
 	_create_board()
 
 func get_cell(index: int) -> Cell:

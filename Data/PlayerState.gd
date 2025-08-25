@@ -723,7 +723,7 @@ func serialize() -> Dictionary:
 	return {
 		'id': id,
 		'name': name,
-		'color': color
+		'color': color.to_html()
 	}
 	
 func deserialize(data: Dictionary):

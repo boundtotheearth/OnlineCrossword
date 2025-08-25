@@ -5,7 +5,7 @@ extends NetworkPacket
 @export var cell_state: CellState
 
 func _init(index: int = 0, cell_state: CellState = null) -> void:
-	self.type = "update_cell_state"
+	super("update_cell_state")
 	self.index = index
 	self.cell_state = cell_state
 

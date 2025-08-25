@@ -15,6 +15,8 @@ var crossword_data: CrosswordData
 var selected_direction: Globals.Direction
 var selected_cell: Cell
 
+signal game_ready
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if (not Engine.is_editor_hint()):
@@ -22,11 +24,15 @@ func _ready() -> void:
 		websocket_client.init.connect(_on_init)
 		websocket_client.update_cell_state.connect(_on_update_cell_state)
 		websocket_client.update_game_state.connect(_on_update_game_state)
+		
+		Globals.start_game.connect(start_game)
+		Globals.exit_game.connect(exit_game)
 
 func _on_init(data: InitPacket):
 	var data_parser = CrosswordDataParser.new()
 	data_parser.parse_json(data.puzzle_data)
 	setup(data_parser.data)
+	Globals.game_ready.emit()
 
 func _on_update_cell_state(data: UpdateCellStatePacket):
 	if (board):
@@ -64,6 +70,12 @@ func setup(data: CrosswordData):
 	
 	await get_tree().process_frame # Let layout calculations finish
 	board.select_cell_index(0)
+
+func start_game():
+	websocket_client.start_connection()
+
+func exit_game():
+	websocket_client.close_connection()
 
 func _on_cell_selected(cell: Cell, direction: Globals.Direction):
 	selected_cell = cell
@@ -126,8 +138,8 @@ func _input(event: InputEvent):
 				else:
 					board.select_cell(selected_cell, false, selected_direction)
 		if (event.physical_keycode == KEY_ESCAPE):
+			exit_game()
 			
-			pass
 	if (selected_cell):
 		if (event.is_action_pressed("ui_left")):
 			if (selected_direction == Globals.Direction.DOWN):

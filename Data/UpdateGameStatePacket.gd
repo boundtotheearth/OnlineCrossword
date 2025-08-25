@@ -4,7 +4,7 @@ extends NetworkPacket
 @export var cell_states: Array[CellState]
 
 func _init(cell_states: Array[CellState] = []) -> void:
-	self.type = "update_game_state"
+	super("update_game_state")
 	self.cell_states = cell_states
 
 static func deserialize(data: Dictionary) -> UpdateGameStatePacket:

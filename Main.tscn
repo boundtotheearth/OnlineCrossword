@@ -1,10 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://cwln3ctc1xxek"]
+[gd_scene load_steps=31 format=3 uid="uid://cwln3ctc1xxek"]
 
 [ext_resource type="Theme" uid="uid://c54fkr63shbj" path="res://DefaultTheme.tres" id="1_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dfl7s7q8ag6ms" path="res://Components/ClueContainer.tscn" id="2_cm0pq"]
 [ext_resource type="Script" uid="uid://c6giepbncthhw" path="res://Crossword.gd" id="2_fos0i"]
 [ext_resource type="Script" uid="uid://fd2xpnso8hcc" path="res://Main.gd" id="2_wkp8b"]
 [ext_resource type="Script" uid="uid://cqbvgdyjebsi8" path="res://Clues.gd" id="3_3dxm6"]
+[ext_resource type="Script" uid="uid://8ud6l1seke71" path="res://MenuButton.gd" id="3_20pc6"]
 [ext_resource type="Script" uid="uid://dfdt0ttbrkg60" path="res://Board.gd" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://68cxd5ein8rr" path="res://Components/Cell.tscn" id="4_cm0pq"]
 [ext_resource type="Script" uid="uid://cyld4iou65gup" path="res://CurrentClue.gd" id="5_trn2v"]
@@ -13,6 +14,39 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
 bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c2ibq"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j4qnp"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fpfj3"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sc1dx"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kjvhd"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5tuhn"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2gh4u"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_devvj"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3b0ty"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg4s2"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hhcpw"]
+bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lgr22"]
 content_margin_left = 10.0
@@ -105,6 +139,29 @@ color = Color(0.85098, 0.537255, 0.788235, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Main/VBoxContainer/Header"]
 layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Main/VBoxContainer/Header/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
+theme_override_colors/font_hover_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
+theme_override_colors/font_outline_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
+theme_override_colors/font_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
+theme_override_colors/font_focus_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
+theme_override_colors/font_pressed_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
+theme_override_styles/focus = SubResource("StyleBoxFlat_c2ibq")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_j4qnp")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_fpfj3")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_sc1dx")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_kjvhd")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_5tuhn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2gh4u")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_devvj")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_3b0ty")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_bg4s2")
+theme_override_styles/normal = SubResource("StyleBoxFlat_hhcpw")
+text = "    < Back    "
+script = ExtResource("3_20pc6")
 
 [node name="Label" type="Label" parent="Main/VBoxContainer/Header/HBoxContainer"]
 layout_mode = 2
@@ -231,7 +288,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_03owx")
 
-[node name="Login" type="Panel" parent="." node_paths=PackedStringArray("NameLineEdit", "ColorButton")]
+[node name="Login" type="Panel" parent="." node_paths=PackedStringArray("NameLineEdit", "ColorButton", "PlayButton")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -242,6 +299,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_5vvyt")
 script = ExtResource("8_03owx")
 NameLineEdit = NodePath("NameLineEdit")
 ColorButton = NodePath("ColorPickerButton")
+PlayButton = NodePath("PlayButton")
 
 [node name="Title" type="Label" parent="Login"]
 layout_mode = 1
@@ -344,4 +402,5 @@ text = "Play"
 script = ExtResource("8_trn2v")
 websocket_url = "ws://localhost:8765"
 
+[connection signal="pressed" from="Main/VBoxContainer/Header/HBoxContainer/BackButton" to="Main/VBoxContainer/Header/HBoxContainer/BackButton" method="_on_pressed"]
 [connection signal="pressed" from="Login/PlayButton" to="Login" method="_on_play_button_pressed"]

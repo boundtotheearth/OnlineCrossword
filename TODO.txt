@@ -1,22 +1,18 @@
 Refactor:
-	Change all data to state
+	!! Change all data to state
 		Move all signals to state
 	Use themes
 	Write tests
 		
 Bugs:
-	Typing in login screen also types in game
 	Top row cells clipped when selected
 
 Features:
-	Timer or Title
+	Timer
 	Health, Stun and Respawn
 	Currently connected players
 	Other player's cursors
 	Letter attributions
-	!! Menu/Login (initials + color)
-		Show menu on escape/back button
-		Online integration
 	API Scrapping
 	Dynamic Board Size
 	Contribution style guide

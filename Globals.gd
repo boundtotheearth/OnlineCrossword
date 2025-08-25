@@ -12,6 +12,10 @@ enum CellType {
 
 var player_state: PlayerState = PlayerState.new()
 
+signal start_game
+signal game_ready
+signal exit_game
+
 func direction_to_vector(direction: Direction) -> Vector2i:
 	match(direction):
 		Direction.ACROSS:
